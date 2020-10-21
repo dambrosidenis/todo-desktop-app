@@ -1,0 +1,3 @@
+# ignore all .DS_Store (MacOS file)
+*.DS_Store
+
