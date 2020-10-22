@@ -41,28 +41,32 @@ class ToDo {
     }
 
     /**
-     * RETURN the title of the todo
+     * Retrieve the title of the todo
+     * @return the title of the todo as String
      */
     String getTitle() {
         return this.title;
     }
 
     /**
-     * RETURN the description of the todo
+     * Retrieve the description of the todo
+     * @return the description of the todo as String
      */
     String getDescription() {
         return this.description;
     }
 
     /**
-     * RETURN the date of creation of the todo
+     * Retrieve the date of creation of the todo
+     * @return the date of creation of the todo as LocalDateTime
      */
     LocalDateTime getCreation() {
         return this.creation;
     }
 
     /**
-     * RETURN the tags of the todo
+     * Retrieve the tags of the todo
+     * @return the tags of the todo as ArrayList
      */
     ArrayList<String> getTags() {
         return this.tags;
