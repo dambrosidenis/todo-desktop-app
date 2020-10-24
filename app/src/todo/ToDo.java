@@ -3,21 +3,21 @@ package app.src.todo;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 
-class ToDo {
+public class ToDo {
 
-    private String title;
-    private String description;
-    private LocalDateTime creation;
-    private ArrayList<String> tags;
+    public String title;
+    public String description;
+    public LocalDateTime creation;
+    public ArrayList<String> tags;
 
-    ToDo(String title, String description, ArrayList<String> tags) {
+    public ToDo(String title, String description, ArrayList<String> tags) {
         this.title = title;
         this.description = description;
         this.creation = LocalDateTime.now();
         this.tags = tags;
     }
 
-    ToDo(String title, String description) {
+    public ToDo(String title, String description) {
         this.title = title;
         this.description = description;
         this.creation = LocalDateTime.now();
@@ -26,9 +26,9 @@ class ToDo {
 
     /**
      * MODIFY the title of the todo
-     * @param newTitle is the new title to set
+     * @param newTitle is the new title to set. REQUIRED a not-empty string.
      */
-    void setTitle(String newTitle) {
+    public void setTitle(String newTitle) {
         this.title = newTitle;
     }
 
@@ -41,7 +41,7 @@ class ToDo {
     }
 
     /**
-     * Retrieve the title of the todo
+     * RETURN the title of the todo
      * @return the title of the todo as String
      */
     String getTitle() {
@@ -49,7 +49,7 @@ class ToDo {
     }
 
     /**
-     * Retrieve the description of the todo
+     * RETURN the description of the todo
      * @return the description of the todo as String
      */
     String getDescription() {
@@ -57,7 +57,7 @@ class ToDo {
     }
 
     /**
-     * Retrieve the date of creation of the todo
+     * RETURN the date of creation of the todo
      * @return the date of creation of the todo as LocalDateTime
      */
     LocalDateTime getCreation() {
@@ -65,11 +65,34 @@ class ToDo {
     }
 
     /**
-     * Retrieve the tags of the todo
+     * RETURN the tags of the todo
      * @return the tags of the todo as ArrayList
      */
     ArrayList<String> getTags() {
         return this.tags;
     }
 
+    /**
+     * MODIFY the tag list of the todo by adding a tag if not already existing.
+     * @param newTag is the new tag.
+     */
+    void addTag(String newTag) {
+        if (tags.contains(newTag)) {
+            System.out.println("Already existing tag");
+        } else {
+            tags.add(newTag);
+        }
+    }
+
+    /**
+     * MODIFY the tag list of the todo by deleting a tag if already existing.
+     * @param deletedTag is the tag that needs to be removed.
+     */
+    void deleteTag(String deletedTag) {
+        if (!tags.contains(deletedTag)) {
+            System.out.println("Not existing tag");
+        } else {
+            tags.add(deletedTag);
+        }
+    }
 }   // class ToDo
