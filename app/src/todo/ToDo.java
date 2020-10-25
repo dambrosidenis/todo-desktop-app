@@ -5,10 +5,10 @@ import java.util.ArrayList;
 
 public class ToDo {
 
-    public String title;
-    public String description;
-    public LocalDateTime creation;
-    public ArrayList<String> tags;
+    private String title;
+    private String description;
+    private LocalDateTime creation;
+    private ArrayList<String> tags;
 
     public ToDo(String title, String description, ArrayList<String> tags) {
         this.title = title;
@@ -28,7 +28,7 @@ public class ToDo {
      * MODIFY the title of the todo
      * @param newTitle is the new title to set. REQUIRED a not-empty string.
      */
-    public void setTitle(String newTitle) {
+    void setTitle(String newTitle) {
         this.title = newTitle;
     }
 
