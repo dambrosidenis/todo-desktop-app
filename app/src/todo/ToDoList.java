@@ -1,4 +1,6 @@
 package app.src.todo;
+
+import java.util.Collection;
 import java.util.ArrayList;
 
 class ToDoList {
@@ -15,7 +17,7 @@ class ToDoList {
      * @param toDoDescription is the description of the ToDo. At least it has to be an empty String.
      * @param toDoTags is the list of tags of the ToDo. At least it has to be empty.
      */
-    void addToDo(String toDoTitle, String toDoDescription, ArrayList<String> toDoTags){
+    void addToDo(String toDoTitle, String toDoDescription, Collection<String> toDoTags){
         loadedToDos.add(new ToDo(toDoTitle, toDoDescription, toDoTags));
     }
 
@@ -63,4 +65,4 @@ class ToDoList {
         modifiedToDo.deleteTag(deletedTag);
     }
     
-} // class ToDoList
+}   // class ToDoList

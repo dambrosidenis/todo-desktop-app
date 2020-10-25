@@ -1,6 +1,7 @@
 package app.src.todo;
 
 import java.time.LocalDateTime;
+import java.util.Collection;
 import java.util.ArrayList;
 
 public class ToDo {
@@ -8,9 +9,9 @@ public class ToDo {
     private String title;
     private String description;
     private LocalDateTime creation;
-    private ArrayList<String> tags;
+    private Collection<String> tags;
 
-    public ToDo(String title, String description, ArrayList<String> tags) {
+    public ToDo(String title, String description, Collection<String> tags) {
         this.title = title;
         this.description = description;
         this.creation = LocalDateTime.now();
@@ -25,7 +26,7 @@ public class ToDo {
     }
 
     /**
-     * MODIFY the title of the todo
+     * MODIFY the title of the todo.
      * @param newTitle is the new title to set. REQUIRED a not-empty string.
      */
     void setTitle(String newTitle) {
@@ -33,42 +34,42 @@ public class ToDo {
     }
 
     /**
-     * MODIFY the description of the todo
-     * @param newDescription is the new description to set
+     * MODIFY the description of the todo.
+     * @param newDescription is the new description to set.
      */
     void setDescription(String newDescription) {
         this.description = newDescription;
     }
 
     /**
-     * RETURN the title of the todo
-     * @return the title of the todo as String
+     * RETURN the title of the todo.
+     * @return the title of the todo as String.
      */
     String getTitle() {
         return this.title;
     }
 
     /**
-     * RETURN the description of the todo
-     * @return the description of the todo as String
+     * RETURN the description of the todo.
+     * @return the description of the todo as String.
      */
     String getDescription() {
         return this.description;
     }
 
     /**
-     * RETURN the date of creation of the todo
-     * @return the date of creation of the todo as LocalDateTime
+     * RETURN the date of creation of the todo.
+     * @return the date of creation of the todo as LocalDateTime.
      */
     LocalDateTime getCreation() {
         return this.creation;
     }
 
     /**
-     * RETURN the tags of the todo
-     * @return the tags of the todo as ArrayList
+     * RETURN the tags of the todo.
+     * @return the tags of the todo as Collection.
      */
-    ArrayList<String> getTags() {
+    Collection<String> getTags() {
         return this.tags;
     }
 
@@ -92,7 +93,7 @@ public class ToDo {
         if (!tags.contains(deletedTag)) {
             System.out.println("Not existing tag");
         } else {
-            tags.add(deletedTag);
+            tags.remove(deletedTag);
         }
     }
 }   // class ToDo
