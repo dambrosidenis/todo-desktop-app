@@ -1,4 +1,4 @@
-package app.src.todo;
+ 
 
 import java.time.LocalDateTime;
 import java.util.Collection;
@@ -95,5 +95,14 @@ public class ToDo {
         } else {
             tags.remove(deletedTag);
         }
+    }
+    
+    /**
+     * RETURN all the data about the ToDo.
+     * @return a string array containing, in order: the title, the description, the date of creation and the tags of the ToDo.
+     */
+    String[] getData() {
+        String[] data = { title, description, creation.toString() };
+        return data;
     }
 }   // class ToDo
