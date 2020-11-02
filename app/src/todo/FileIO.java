@@ -21,60 +21,77 @@ class FileIO {
 
     /**
      * Create a new file if it does not already exist.
+     * @return true if the file is successfully created, false otherwise.
+     * @throws IOException when an error occur while creating the file, in this case nothing will be created.
      */
-    public void create() {
+    public boolean create() throws IOException {
+        boolean result = false;
+
         try {
-            if (!file.createNewFile()) {
-                System.out.println("The file already exists.");
-            }
-        } catch (IOException e) {
-            printError(e);
+            result = file.createNewFile();
+        } catch (IOException ioe) {
+            throw new IOException("An error occurred while creating the file");
         }
+
+        return result;
     }
 
     /**
      * Write data to the file if it exists.
      * @param data: data to save.
+     * @return true if the data was correctly saved, false otherwise.
+     * @throws IOException when an error occur while writing the data, in this case nothing will be saved into the file.
      */
-    public void save(String data) {
-        if (file.exists()) {
+    public boolean save(String data) throws IOException {
+        if (this.alreadyExist()) {
+            FileWriter fileOut = null;
             try {
-                FileWriter fileOut = new FileWriter(file);
+                fileOut = new FileWriter(file);
                 fileOut.write(data);
-                fileOut.close();
-            } catch (IOException e) {
-                printError(e);
+            } catch (IOException ioe) {
+                throw new IOException("An error occurred while writing the file");
+            } finally {
+                if (fileOut != null) {
+                    fileOut.close();
+                }
+            }
+
+            if (fileOut != null) {
+                return true;
             }
         }
+        
+        return false;
     }
 
     /**
      * Read the data from the file if it exists.
-     * @return the data read from the file.
+     * @return the data read from the file if it exists, return null otherwise.
+     * @throws IOException when an error occur while reading the data, in this case nothing will be read by the file.
      */
-    public String load() {
-        String dataRead = "";
+    public String load() throws IOException {
+        StringBuilder dataRead = null;
+
         if (this.alreadyExist()) {
+            Scanner fileIn = null;
             try {
-                Scanner fileIn = new Scanner(file);
+                fileIn = new Scanner(file);
+                dataRead = new StringBuilder();
                 while (fileIn.hasNextLine()) {
-                    dataRead += fileIn.nextLine();
+                    dataRead.append(fileIn.nextLine());
                 }
-                fileIn.close();
             }
-            catch (IOException e) {
-                printError(e);
+            catch (IOException ioe) {
+                throw new IOException("An error occurred while reading the file");
+            } finally {
+                if (fileIn != null) {
+                    fileIn.close();
+                }
             }
         }
-        return dataRead;
-    }
-
-    /**
-     * Print an error to the console.
-     * @param e: the exception thrown.
-     */
-    private void printError(IOException e) {
-        System.out.println("An error occurred.");
-        e.printStackTrace();
+        if (dataRead != null) {
+            return dataRead.toString();
+        }
+        return null;
     }
 }
