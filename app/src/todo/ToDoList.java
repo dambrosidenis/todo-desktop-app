@@ -7,6 +7,7 @@ import java.util.ArrayList;
 class ToDoList {
 
     private ArrayList<ToDo> loadedToDos;
+    private final String emptyTitleErrorString = "A ToDo title can't be empty";
 
     ToDoList() {
         this.loadedToDos = new ArrayList<ToDo>();
@@ -20,11 +21,12 @@ class ToDoList {
      * @throws EmptyStringException when the ToDo title is empty. In this case the ToDo wouldn't be added.
      */
     void addToDo(String toDoTitle, String toDoDescription, Collection<String> toDoTags) throws EmptyFieldException{
-        try {
-            loadedToDos.add(new ToDo(toDoTitle, toDoDescription, toDoTags));
-        } catch (IllegalArgumentException iae) {
-            throw new EmptyFieldException(iae.getMessage());
+
+        if (toDoTitle == null || toDoTitle.isEmpty()) {
+            throw new EmptyFieldException(emptyTitleErrorString);
         }
+
+        loadedToDos.add(new ToDo(toDoTitle, toDoDescription, toDoTags));
     }
     
     /**
@@ -34,11 +36,12 @@ class ToDoList {
      * @throws EmptyStringException when the ToDo title is empty. In this case the ToDo wouldn't be added.
      */
     void addToDo(String toDoTitle, String toDoDescription) throws EmptyFieldException {
-        try {
-            loadedToDos.add(new ToDo(toDoTitle, toDoDescription));
-        } catch (IllegalArgumentException iae) {
-            throw new EmptyFieldException(iae.getMessage());
+
+        if (toDoTitle == null || toDoTitle.isEmpty()) {
+            throw new EmptyFieldException(emptyTitleErrorString);
         }
+
+        loadedToDos.add(new ToDo(toDoTitle, toDoDescription));
     }
 
     /**
@@ -66,7 +69,7 @@ class ToDoList {
         if (modifiedToDoIndex < 0 || modifiedToDoIndex > loadedToDos.size()) {
             throw new IndexOutOfBoundsException();
         } else if (newTitle == null || newTitle.isEmpty()) {
-            throw new EmptyFieldException("A ToDo title can't be empty");
+            throw new EmptyFieldException(emptyTitleErrorString);
         }
 
         ToDo modifiedToDo = recogniseToDo(modifiedToDoIndex);
@@ -89,22 +92,27 @@ class ToDoList {
     }
 
     /**
-     * MODIFY a ToDo by adding a tag to its list.
+     * MODIFY a ToDo by adding a tag to its list if not already in.
      * @param modifiedToDo is the intex of the instance that has to be modified. Required a valid instance contained in loadedToDos.
      * @param newTag is the new tag of the todo.
+     * @throws EmptyFieldException when newTag is null or empty. In this case the tag wouldn't be added.
      */
-    void addToDoTag(int modifiedToDoIndex, String newTag) {
+    void addToDoTag(int modifiedToDoIndex, String newTag) throws EmptyFieldException {
 
         if (modifiedToDoIndex < 0 || modifiedToDoIndex > loadedToDos.size()) {
             throw new IndexOutOfBoundsException();
+        } else if (newTag == null || newTag.isEmpty()) {
+            throw new EmptyFieldException("A ToDo tag that is going to be added can't be empty");
         }
 
         ToDo modifiedToDo = recogniseToDo(modifiedToDoIndex);
-        modifiedToDo.addTag(newTag);
+        if (!modifiedToDo.getTags().contains(newTag)) {
+            modifiedToDo.addTag(newTag);
+        }
     }
 
     /**
-     * MODIFY a ToDo by deleting a tag from its list.
+     * MODIFY a ToDo by deleting a tag from its list if it already exists.
      * @param modifiedToDo is the index of the instance that has to be modified. Required a valid instance contained in loadedToDos.
      * @param deletedTag is the tag of the todo that has to be deleted.
      */
@@ -115,7 +123,9 @@ class ToDoList {
         }
 
         ToDo modifiedToDo = recogniseToDo(modifiedToDoIndex);
-        modifiedToDo.deleteTag(deletedTag);
+        if (!modifiedToDo.getTags().contains(deletedTag)) {
+            modifiedToDo.deleteTag(deletedTag);
+        }
     }
     
     /**

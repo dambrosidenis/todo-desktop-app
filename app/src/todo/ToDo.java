@@ -9,14 +9,7 @@ public class ToDo {
     private LocalDateTime creation;
     private Collection<String> tags;
 
-    private final String emptyTitleError = "A ToDo title can't be empty";
-
     public ToDo(String title, String description, Collection<String> tags) {
-
-        if (title == null || title.isEmpty()) {
-            throw new IllegalArgumentException(emptyTitleError);
-        }
-
         this.title = title;
         this.description = description;
         this.creation = LocalDateTime.now();
@@ -24,11 +17,6 @@ public class ToDo {
     }
 
     public ToDo(String title, String description) {
-
-        if (title == null || title.isEmpty()) {
-            throw new IllegalArgumentException(emptyTitleError);
-        }
-
         this.title = title;
         this.description = description;
         this.creation = LocalDateTime.now();
@@ -41,9 +29,7 @@ public class ToDo {
      */
     void setTitle(String newTitle) {
 
-        if (newTitle == null || newTitle.isEmpty()){
-            throw new IllegalArgumentException(emptyTitleError);
-        }
+        assert (newTitle != null && !newTitle.isEmpty()): "A ToDo title can't be empty";
 
         this.title = newTitle;
     }
@@ -94,13 +80,10 @@ public class ToDo {
      */
     void addTag(String newTag) {
 
-        if (newTag == null || newTag.isEmpty()) {
-            throw new IllegalArgumentException("A ToDo tag that is going to be added can't be empty");
-        } else if (tags.contains(newTag)) {
-            throw new IllegalArgumentException("Tag already exists for this ToDo");
-        } else {
-            tags.add(newTag);
-        }
+        assert (newTag != null && !newTag.isEmpty()): "A ToDo tag that is going to be added can't be empty";
+        assert (!tags.contains(newTag)): "Tag already exists for this ToDo";
+
+        tags.add(newTag);
     }
 
     /**
@@ -108,13 +91,11 @@ public class ToDo {
      * @param deletedTag is the tag that needs to be removed.
      */
     void deleteTag(String deletedTag) {
-        if (deletedTag == null || deletedTag.isEmpty()) {
-            throw new IllegalArgumentException("A ToDo tag is going to be deleted can't be empty");
-        } else if (!tags.contains(deletedTag)) {
-            throw new IllegalArgumentException("The tag doesn't exist for this ToDo");
-        } else {
-            tags.remove(deletedTag);
-        }
+
+        assert (deletedTag != null && !deletedTag.isEmpty()): "A ToDo tag that is going to be added can't be empty";
+        assert (tags.contains(deletedTag)): "Tag already exists for this ToDo";
+
+        tags.remove(deletedTag);
     }
     
     /**

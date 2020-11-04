@@ -12,7 +12,7 @@ public class EmptyFieldException extends Exception {
     public EmptyFieldException(String field, String defaultValue) {
         super();
         this.field = field;
-        this. defaultValueString = defaultValue;
+        this.defaultValueString = defaultValue;
     }
 
     public EmptyFieldException(String msg) {
@@ -22,7 +22,7 @@ public class EmptyFieldException extends Exception {
     public EmptyFieldException(String msg, String field, String defaultValue) {
         super(msg);
         this.field = field;
-        this. defaultValueString = defaultValue;
+        this.defaultValueString = defaultValue;
     }
 
     /**
