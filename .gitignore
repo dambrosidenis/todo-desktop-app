@@ -1,3 +1,5 @@
-# ignore all .DS_Store (MacOS file)
+# Ignore all .DS_Store (MacOS file)
 *.DS_Store
 
+# Maven
+target/
