@@ -1,7 +1,7 @@
-package app.src.todo;
+package todoapp.todo;
 
 import java.io.IOException;
-import app.src.exceptions.BackupFailedException;
+import todoapp.exceptions.BackupFailedException;
 
 class Backup {
 

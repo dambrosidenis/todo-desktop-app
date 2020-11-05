@@ -1,6 +1,6 @@
-package app.src.todo;
+package todoapp.todo;
 
-import app.src.exceptions.EmptyFieldException;
+import todoapp.exceptions.EmptyFieldException;
 import java.util.Collection;
 import java.util.ArrayList;
 

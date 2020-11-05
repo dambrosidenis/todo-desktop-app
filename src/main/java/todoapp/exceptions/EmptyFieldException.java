@@ -1,4 +1,4 @@
-package app.src.exceptions;
+package todoapp.exceptions;
 
 public class EmptyFieldException extends Exception {
 
