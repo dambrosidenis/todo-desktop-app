@@ -50,7 +50,7 @@ class ToDoList {
      */
     void removeToDo(int deletedToDoIndex) {
 
-        if (deletedToDoIndex < 0 || deletedToDoIndex > loadedToDos.size()) {
+        if (deletedToDoIndex < 0 || deletedToDoIndex >= loadedToDos.size()) {
             throw new IndexOutOfBoundsException();
         }
 
@@ -66,7 +66,7 @@ class ToDoList {
      */
     void modifyToDoTitle(int modifiedToDoIndex, String newTitle) throws EmptyFieldException {
 
-        if (modifiedToDoIndex < 0 || modifiedToDoIndex > loadedToDos.size()) {
+        if (modifiedToDoIndex < 0 || modifiedToDoIndex >= loadedToDos.size()) {
             throw new IndexOutOfBoundsException();
         } else if (newTitle == null || newTitle.isEmpty()) {
             throw new EmptyFieldException(emptyTitleErrorString);
@@ -83,7 +83,7 @@ class ToDoList {
      */
     void modifyToDoDescription(int modifiedToDoIndex, String newDescription){
 
-        if (modifiedToDoIndex < 0 || modifiedToDoIndex > loadedToDos.size()) {
+        if (modifiedToDoIndex < 0 || modifiedToDoIndex >= loadedToDos.size()) {
             throw new IndexOutOfBoundsException();
         }
 
@@ -99,7 +99,7 @@ class ToDoList {
      */
     void addToDoTag(int modifiedToDoIndex, String newTag) throws EmptyFieldException {
 
-        if (modifiedToDoIndex < 0 || modifiedToDoIndex > loadedToDos.size()) {
+        if (modifiedToDoIndex < 0 || modifiedToDoIndex >= loadedToDos.size()) {
             throw new IndexOutOfBoundsException();
         } else if (newTag == null || newTag.isEmpty()) {
             throw new EmptyFieldException("A ToDo tag that is going to be added can't be empty");
@@ -118,7 +118,7 @@ class ToDoList {
      */
     void deleteToDoTag(int modifiedToDoIndex, String deletedTag) {
 
-        if (modifiedToDoIndex < 0 || modifiedToDoIndex > loadedToDos.size()) {
+        if (modifiedToDoIndex < 0 || modifiedToDoIndex >= loadedToDos.size()) {
             throw new IndexOutOfBoundsException();
         }
 
@@ -144,7 +144,7 @@ class ToDoList {
      */
     String[] getToDoData(int toDoIndex) {
 
-        if (toDoIndex < 0 || toDoIndex > loadedToDos.size()) {
+        if (toDoIndex < 0 || toDoIndex >= loadedToDos.size()) {
             throw new IndexOutOfBoundsException();
         }
 
