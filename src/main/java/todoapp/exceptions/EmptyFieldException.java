@@ -9,6 +9,10 @@ public class EmptyFieldException extends Exception {
         super();
     }
 
+    public EmptyFieldException(Throwable t) {
+        super(t);
+    }
+
     public EmptyFieldException(String field, String defaultValue) {
         super();
         this.field = field;
@@ -21,6 +25,22 @@ public class EmptyFieldException extends Exception {
 
     public EmptyFieldException(String msg, String field, String defaultValue) {
         super(msg);
+        this.field = field;
+        this.defaultValueString = defaultValue;
+    }
+
+    public EmptyFieldException(String msg, Throwable t) {
+        super(msg, t);
+    }
+
+    public EmptyFieldException(String msg, String field, String defaultValue, Throwable t) {
+        super(msg, t);
+        this.field = field;
+        this.defaultValueString = defaultValue;
+    }
+
+    public EmptyFieldException(String field, String defaultValue, Throwable t) {
+        super(t);
         this.field = field;
         this.defaultValueString = defaultValue;
     }

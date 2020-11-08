@@ -29,7 +29,7 @@ class Backup {
             fileHandler.create();
             fileHandler.save(dataReadyToBackup.toString());
         } catch (IOException ioe) {
-            throw new BackupFailedException(ioe.getMessage());
+            throw new BackupFailedException(ioe.getMessage(), ioe);
         }
         
     }

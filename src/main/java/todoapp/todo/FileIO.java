@@ -32,7 +32,7 @@ class FileIO {
         try {
             result = file.createNewFile();
         } catch (IOException ioe) {
-            throw new IOException("An error occurred while creating the file");
+            throw new IOException("An error occurred while creating the file", ioe);
         }
 
         return result;
@@ -51,7 +51,7 @@ class FileIO {
                 fileOut = new FileWriter(file);
                 fileOut.write(data);
             } catch (IOException ioe) {
-                throw new IOException("An error occurred while writing the file");
+                throw new IOException("An error occurred while writing the file", ioe);
             } finally {
                 if (fileOut != null) {
                     fileOut.close();
@@ -84,7 +84,7 @@ class FileIO {
                 }
             }
             catch (IOException ioe) {
-                throw new IOException("An error occurred while reading the file");
+                throw new IOException("An error occurred while reading the file", ioe);
             } finally {
                 if (fileIn != null) {
                     fileIn.close();

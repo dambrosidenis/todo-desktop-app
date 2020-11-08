@@ -10,4 +10,12 @@ public class BackupFailedException extends Exception {
         super(msg);
     }
 
+    public BackupFailedException(String msg, Throwable t) {
+        super(msg, t);
+    }
+
+    public BackupFailedException(Throwable t) {
+        super(t);
+    }
+
 }
