@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
+
+
+<GridPane alignment="center" hgap="10" vgap="10" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8.0.111" fx:controller="todoapp.controllers.Controller">
+   <children>
+      <TextField layoutX="15.0" layoutY="25.0" fx:id="inputField" />
+      <Label layoutX="15.0" layoutY="84.0" text="TEXT GOES HERE" fx:id="label" />
+      <Button layoutX="124.0" layoutY="160.0" mnemonicParsing="false" text="Apply" onAction="#applyButtonClicked" fx:id="applyButton" />
+   </children>
+</GridPane>
