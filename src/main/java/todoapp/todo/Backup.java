@@ -3,8 +3,10 @@ package todoapp.todo;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.json.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Arrays;
 
@@ -95,9 +97,12 @@ public class Backup {
 
     public static void main(String[] args) {
         ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.setVisibility(objectMapper.getVisibilityChecker()
+             .withFieldVisibility(JsonAutoDetect.Visibility.ANY));  // Set objectmapper to accept properties of a class with any visibility (not only publics one)
+        objectMapper.findAndRegisterModules();  // Find serialization methods of objects and register them in order to use them (also the one for LocalDateTime, which is needed)
         ToDo myTodo = new ToDo("Titolo", "Descrizione", Arrays.asList("tag1", "tag2"));
         try {
-            objectMapper.writeValue(new File("laMiaProva.json"), myTodo);
+            objectMapper.writeValue(new FileOutputStream("laMiaProva.json"), myTodo);
             System.out.println("FATTO!");
         } catch(JsonProcessingException jpe) {
             System.out.println("FUCK");
