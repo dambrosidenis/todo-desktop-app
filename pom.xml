@@ -35,10 +35,35 @@
 			<groupId>org.junit.jupiter</groupId>
 			<artifactId>junit-jupiter</artifactId>
 			<scope>test</scope>
-		</dependency>
+    </dependency>
+    
+    <dependency>
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <artifactId>jackson-core</artifactId>
+      <version>2.12.0-rc1</version>
+    </dependency>
+    
+    <dependency>
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <artifactId>jackson-annotations</artifactId>
+      <version>2.12.0-rc1</version>
+    </dependency>
+    
+    <dependency>
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <artifactId>jackson-databind</artifactId>
+      <version>2.12.0-rc1</version>
+    </dependency>
 	</dependencies>
 
   <build>
+
+    <resources>
+      <resource>
+        <directory>src</directory>
+      </resource>
+    </resources>
+
 		<plugins>
 			<plugin>
 				<artifactId>maven-compiler-plugin</artifactId>
@@ -49,5 +74,9 @@
 				<version>2.22.2</version>
 			</plugin>
 		</plugins>
-	</build>
+  </build>
+  
+
+
+
 </project>
