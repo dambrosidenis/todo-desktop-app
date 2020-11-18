@@ -2,9 +2,9 @@ package todoapp;
 
 import javafx.application.Application;
 import javafx.stage.Stage;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.fxml.FXMLLoader;
+import javafx.scene.layout.StackPane;
+import javafx.scene.control.Button;
 
 public class App extends Application {
     
@@ -26,11 +26,15 @@ public class App extends Application {
      */
     @Override
     public void start(Stage primaryStage) throws Exception {
-        Parent root = FXMLLoader.load(getClass().getResource("appStructure.fxml"));
-        root.getStylesheets().add(getClass().getResource("appStyle.css").toString());
+        Button btn = new Button("Bottone di prova");
+        btn.setOnAction(actionEvent -> btn.setText("Funziona!"));
 
-        primaryStage.setTitle("Hello World");
-        primaryStage.setScene(new Scene(root, 300, 275));
+        StackPane root = new StackPane();
+        root.getChildren().addAll(btn);
+        Scene scene = new Scene(root,600,400);
+
+        primaryStage.setScene(scene);
+        primaryStage.setTitle("App di Prova");
         primaryStage.show();
     }
 }

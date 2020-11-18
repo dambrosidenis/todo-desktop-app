@@ -1,11 +1,10 @@
 package todoapp;
 
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.input.KeyCode;
+import javafx.scene.control.Button;
 import javafx.scene.input.MouseButton;
 import javafx.stage.Stage;
+import javafx.scene.layout.StackPane;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -20,16 +19,24 @@ import org.testfx.matcher.control.LabeledMatchers;
 @ExtendWith(ApplicationExtension.class)
 class AppTest {
 
+    private static Button btn;
+
     /**
      * Method to create the application UI that will be shared among all the 
      * test cases.
      */
     @Start
     private static void start (Stage stage) throws Exception {
-        Parent root = FXMLLoader.load(App.class.getResource("appStructure.fxml"));
-        stage.setScene(new Scene(root));
+        btn = new Button("Bottone di prova");
+        btn.setOnAction(actionEvent -> btn.setText("Funziona!"));
+
+        StackPane root = new StackPane();
+        root.getChildren().addAll(btn);
+        Scene scene = new Scene(root,600,400);
+
+        stage.setScene(scene);
+        stage.setTitle("App di Prova");
         stage.show();
-        stage.toFront();
     }
     
     /**
@@ -48,20 +55,18 @@ class AppTest {
         // Hide the app window
         FxToolkit.hideStage();
 
-        // Release keyboard and mouse
-        robot.release(new KeyCode[]{});
+        // Release mouse
         robot.release(new MouseButton[]{});
     }
 
-    /**
-     * 
-     * @param robot
-     */
     @Test
-    void testInput(FxRobot robot) {
-        robot.clickOn("#inputField");
-        robot.write("This is a test!");
-        robot.clickOn("#applyButton");
-        FxAssert.verifyThat("#label", LabeledMatchers.hasText("This is a test!"));
+    void existButtonWithText(FxRobot robot) {
+        FxAssert.verifyThat(btn, LabeledMatchers.hasText("Bottone di prova"));
+    }
+
+    @Test
+    void textChangesWhenClicked(FxRobot robot) {
+        robot.clickOn(btn);
+        FxAssert.verifyThat(btn, LabeledMatchers.hasText("Funziona!"));
     }
 }
