@@ -1,16 +1,12 @@
 package todoapp.todo;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.json.*;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.annotation.JsonAutoDetect;
-
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Iterator;
 
 import todoapp.exceptions.BackupFailedException;
+import todoapp.exceptions.EmptyFieldException;
 
 public class Backup {
 
@@ -33,12 +29,23 @@ public class Backup {
             throw new IllegalArgumentException("The ToDoList have to be at least empty.");
         }
 
-        StringBuilder dataReadyToBackup = new StringBuilder("{\n");
         int listLength = currentToDoList.size();
-        for (int i = 0; i < listLength; i++) {
-            dataReadyToBackup.append(dataReadyToBackup + encodeToDoToJSON(currentToDoList.getToDoData(i)));
+        StringBuilder dataReadyToBackup = new StringBuilder(String.valueOf(listLength) + '\n');
+
+        Iterator<ToDo> toDoIterator = currentToDoList.iterator();
+        ToDo backupToDo;
+        while(toDoIterator.hasNext()) {
+
+            backupToDo = toDoIterator.next();
+            dataReadyToBackup.append( sanificate(backupToDo.getData()[0], false) + '\n' );
+            dataReadyToBackup.append( sanificate(backupToDo.getData()[1], false) + '\n' );
+            dataReadyToBackup.append( sanificate(backupToDo.getData()[2], false) + '\n' );
+
+            for (int i = 3; i < backupToDo.getData().length; i++) {
+                dataReadyToBackup.append( sanificate(backupToDo.getData()[i], false) + ", " );
+            }
+            dataReadyToBackup.append('\n');
         }
-        dataReadyToBackup.append("\n}");
 
         FileIO fileHandler = new FileIO("myBackup.bak");
 
@@ -51,65 +58,66 @@ public class Backup {
         
     }
 
-    /**
-     * RETURN a JSON object formatted as String containing the attributes of a ToDo.
-     * @param instanceData is a string array containing the information about the ToDo. Requires to have at least 3 elements.
-     * @return the encoded string.
-     */
-    private String encodeToDoToJSON(String[] instanceData) {
-
-        if (instanceData == null || instanceData.length < 3) {
-            throw new IllegalArgumentException("The ToDos' string representation must have at least 3 elements.");
-        }
-
-        return "{\n" + "\t\"title\":\"" + instanceData[0] + "\",\n"
-                            + "\t\"description\":\"" + instanceData[1] + "\",\n"
-                            + "\t\"date\":\"" + instanceData[2] + "\",\n"
-                            + encodeTags(instanceData) + "}";
-    }
-
-    /**
-     * RETURN a JSON array formatted as String containing the tags of a ToDo.
-     * @param todo valid instance of class ToDo.
-     * @return the encoded string.
-     */
-    private String encodeTags(String[] instanceData) {
-
-        if (instanceData == null) {
-            throw new IllegalArgumentException("The ToDos' string representation must be at least empty.");
-        }
-
-        String encodedTags = "\t\"tags\": [ ";
-        for (int i = 3; i < instanceData.length; i++) {
-            encodedTags = encodedTags + "\"" + instanceData[i] + "\" ";
-        }
-        return encodedTags + "]\n";
-    }
+   
 
 
     /**
      * RETURN a ToDoList composed of the Objects found in the backup file
-     * @return a valid ToDoList
-     * @throws FileNotFoundException if it doesn't file any backup file
-     * @throws IllegalBackupException if the backup file is corrupted
+     * If an EmptyFieldException is catch it returns NULL.
+     * 
+     * @return a valid ToDoList or null if
+     * @throws  IOException if it doesn't find any backup file or the file is
+     *          is corrupted
      */
-    private void retrieveBackup() {}
+    private ToDoList retrieveBackup() throws IOException {
 
-    public static void main(String[] args) {
-        ObjectMapper objectMapper = new ObjectMapper();
-        objectMapper.setVisibility(objectMapper.getVisibilityChecker()
-             .withFieldVisibility(JsonAutoDetect.Visibility.ANY));  // Set objectmapper to accept properties of a class with any visibility (not only publics one)
-        objectMapper.findAndRegisterModules();  // Find serialization methods of objects and register them in order to use them (also the one for LocalDateTime, which is needed)
-        ToDo myTodo = new ToDo("Titolo", "Descrizione", Arrays.asList("tag1", "tag2"));
         try {
-            objectMapper.writeValue(new FileOutputStream("laMiaProva.json"), myTodo);
-            System.out.println("FATTO!");
-        } catch(JsonProcessingException jpe) {
-            System.out.println("FUCK");
-            jpe.printStackTrace();
+
+            ToDoList retrievedToDoList = new ToDoList();
+            FileIO fileHandler = new FileIO("myBackup.bak");
+            String[] backupDataFromFile = fileHandler.load().split("\\r?\\n");
+            int numberOfToDos = Integer.valueOf(backupDataFromFile[0]);
+            int i = 1;
+            for (int iterator = 0; iterator < numberOfToDos; iterator++) {
+                retrievedToDoList.addToDo(  sanificate(backupDataFromFile[i], true),
+                                            sanificate(backupDataFromFile[i+1], true),
+                                            sanificate(backupDataFromFile[i+3], true),
+                                            new ArrayList<String>(Arrays.asList(sanificate(backupDataFromFile[i+4], true).split(", "))));
+                i = i + 4;
+            }
+            return retrievedToDoList;
+
         } catch (IOException ioe) {
-            System.out.println("SUPER FUCK");
-            ioe.printStackTrace();
+            throw ioe;
+        } catch (EmptyFieldException efe) {
+            return null;
         }
     }
-}
+
+    /**
+     * Sanificates a String, either substituting each character '\n'
+     * present in dirtyString with character 0 in case of encoding 
+     * or vice-versa in case of decoding. Returns an empty String if
+     * either dirtyString or encoding is NULL.
+     * 
+     * @param dirtyString the String to sanificate
+     * @param   encoding the direction of encoding:
+     *          true = encoding,
+     *          false = decoding;
+     * @return the sanificated String
+     */
+    private String sanificate (String dirtyString, boolean encoding) {
+        
+        try {
+            if (encoding) {
+                return dirtyString.replace('\n', (char) 0);
+            } else {
+                return dirtyString.replace((char) 0, '\n');
+            }
+        } catch (NullPointerException npe) {
+            return new String();
+        }
+    }
+    
+} //class Backup
+
