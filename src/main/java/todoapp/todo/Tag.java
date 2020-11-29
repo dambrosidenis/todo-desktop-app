@@ -13,7 +13,7 @@ public class Tag {
 	 * All the colors a tag can assume.
 	 */
 	public enum Color {
-		RED, BLUE, YELLOW, GREEN, WHITE, BLACK, GRAY, PURPLE, BROWN
+		RED, BLUE, YELLOW, GREEN, WHITE, BLACK, GRAY, PURPLE, BROWN, ORANGE
 	}
 
 	/**
@@ -61,6 +61,20 @@ public class Tag {
 	}
 
 	/**
+	 * Copy constructor that creates a perfect copy of the Tag instance passed.
+	 * @param t: the Tag to copy. REQUIRED not null.
+	 * @throws EmptyFieldException when t is null.
+	 */
+	public Tag(Tag t) throws EmptyFieldException  {
+		if (t == null) {
+			throw new EmptyFieldException("A Tag cannot be null.", "t", "A valid Tag instance.");
+		}
+
+		this.name = t.name;
+		this.color = t.color;
+	}
+
+	/**
      * RETURN the name of the tag.
      * @return the name of the tag as String.
      */
@@ -80,12 +94,10 @@ public class Tag {
 	 * MODIFY the name of the tag, changing it with a new one.
 	 * @param newName: the new name of the tag. REQUIRED to be not null and not 
 	 * empty.
-	 * @throws EmptyFieldException when the new name is null or empty.
 	 */
-	void changeName(String newName) throws EmptyFieldException {
-		if (newName == null || newName.isEmpty()) {
-			throw new EmptyFieldException("A Tag must have a name.", "name", "A valid non-empty string.");
-		}
+	void changeName(String newName) {
+
+		assert (newName != null && !newName.isEmpty()): "A Tag must have a name.";
 
 		name = newName;
 	}
@@ -93,14 +105,44 @@ public class Tag {
 	/**
 	 * MODIFY the color of the tag, changing it with a new one.
 	 * @param newColor: the new color of the tag. REQUIRED to be not null.
-	 * @throws EmptyFieldException when the color is null.
 	 */
-	void changeColor(Color newColor) throws EmptyFieldException  {
-		if (newColor == null) {
-			throw new EmptyFieldException("A Tag must have a color.", "color", "A valid color.");
-		}
+	void changeColor(Color newColor) {
+
+		assert (newColor != null): "A Tag must have a color.";
 
 		color = newColor;
 	}
 
-}
+	/**
+	 * Implement a comparison bethween two instances of Tag.
+	 * @param obj: the object to compare with.
+	 * @return true if obj and this have same name and color, false 
+	 * otherwise.
+	 */
+	@Override
+	public boolean equals(Object obj) {
+		if (obj == null) {
+			return false;
+		}
+
+		if (obj.getClass() != Tag.class) {
+			return false;
+		}
+
+		Tag t = (Tag)obj;
+		if (this.name.length() != t.name.length()) {
+			return false;
+		}
+
+		if (this.name.compareTo(t.name) != 0) {
+			return false;
+		} 
+
+		if (this.color != t.color) {
+			return false;
+		}
+
+		return true;
+	}
+
+}	// class Tag

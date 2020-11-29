@@ -2,12 +2,9 @@ package todoapp.todo;
 
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.api.DisplayName;
 import static org.junit.jupiter.api.Assertions.*;
-
-import java.util.stream.*;
 
 import todoapp.exceptions.EmptyFieldException;
 import todoapp.todo.Tag.Color;
@@ -22,15 +19,15 @@ class TagTest {
 	 * @param color: the color for the new Tag.
      */
     @ParameterizedTest
-    @MethodSource("stringAndColorProvider")
+    @MethodSource("todoapp.todo.SourceArguments#tagCreationParametersProvider")
     @DisplayName("Testing the constructor method with both empty and filled name and color")
     @Tag("Tag")
     void constructorTagTesting(String name, Color color) {
-        if (name.isEmpty()) {
-            assertThrows(EmptyFieldException.class, () ->  t = new todoapp.todo.Tag(name));
+        if (name == null || name.isEmpty()) {
+            assertThrows(EmptyFieldException.class, () -> t = new todoapp.todo.Tag(name));
         } else {
 			if (color == null) {
-				assertThrows(EmptyFieldException.class, () ->  t = new todoapp.todo.Tag(name, color));
+				assertThrows(EmptyFieldException.class, () -> t = new todoapp.todo.Tag(name, color));
 			} else {
 				try {
 					t = new todoapp.todo.Tag(name, color);
@@ -48,22 +45,18 @@ class TagTest {
      * @param name: the new name for the Tag.
      */
     @ParameterizedTest
-    @MethodSource("stringProvider")
+    @MethodSource("todoapp.todo.SourceArguments#stringProvider")
     @DisplayName("Testing the changeName method with both empty and filled name")
     @Tag("Tag")
     void changeNameTagTesting(String name) {
 		try {
-			t = new todoapp.todo.Tag(name);
+			t = new todoapp.todo.Tag("Before");
 		} catch (EmptyFieldException efe) { }
 
-        if (name.isEmpty()) {
-            assertThrows(EmptyFieldException.class, () ->  t.changeName(name));
-        } else {
-			try {
-				t.changeName(name);
-			} catch (EmptyFieldException efe) {
-				fail("Should not be thrown!");
-			}
+        if (name == null || name.isEmpty()) {
+            assertThrows(AssertionError.class, () -> t.changeName(name));
+        } else {	
+			t.changeName(name);
 			assertEquals(name, t.getName());
         }
 	}
@@ -73,53 +66,47 @@ class TagTest {
      * @param color: the new color for the Tag.
      */
     @ParameterizedTest
-    @MethodSource("colorProvider")
+    @MethodSource("todoapp.todo.SourceArguments#colorProvider")
     @DisplayName("Testing the changeColor method with both null and valid color")
     @Tag("Tag")
     void changeColorTagTesting(Color color) {
 		try {
-			t = new todoapp.todo.Tag("Test", color);
+			t = new todoapp.todo.Tag("Test", Color.BLACK);
 		} catch (EmptyFieldException efe) { }
 
         if (color == null) {
-            assertThrows(EmptyFieldException.class, () ->  t.changeColor(color));
+            assertThrows(AssertionError.class, () -> t.changeColor(color));
         } else {
-			try {
-				t.changeColor(color);
-			} catch (EmptyFieldException efe) {
-				fail("Should not be thrown!");
-			}
+			t.changeColor(color);
 			assertEquals(color, t.getColor());
         }
 	}
 
 	/**
-     * Return a stream of default data to use for test.
-     * @return a stream of strings.
+     * Method to test the equals method.
+	 * @param name: the name of the Tag to compare.
+     * @param color: the color of the Tag to compare.
      */
-    private static Stream<String> stringProvider() {
-        return Stream.of("", "Test");
+    @ParameterizedTest
+    @MethodSource("todoapp.todo.SourceArguments#tagCreationParametersProvider")
+    @DisplayName("Testing the equals method with a predefined test Tag")
+    @Tag("Tag")
+	void equalsTesting(String name, Color color) {
+		todoapp.todo.Tag test = null;
+		try {
+			test = new todoapp.todo.Tag("Test", Color.RED);
+		} catch (EmptyFieldException efe) {}
+		if (name == null || name.isEmpty()) {
+			assertEquals(false, test.equals(null));
+		} else {
+			try {
+				t = new todoapp.todo.Tag(name, color);
+				if (color == null) {
+					assertEquals(false, test.equals(t));
+				} else {
+					assertEquals(true, test.equals(t));
+				}
+			} catch (EmptyFieldException efe) {}
+		}
 	}
-	
-	/**
-     * Return a stream of default data to use for test.
-     * @return a stream of color.
-     */
-    private static Stream<Color> colorProvider() {
-        return Stream.of(null, Color.RED);
-    }
-	
-	/**
-     * Return a stream of default data to use for test.
-     * @return a stream of couple (string, color).
-     */
-    private static Stream<Arguments> stringAndColorProvider() {
-        return Stream.of(
-            Arguments.of("", null),
-            Arguments.of("Test", null),
-            Arguments.of("Test", Color.GREEN),
-            Arguments.of("", Color.GREEN)
-        );
-    }
-	
 }
