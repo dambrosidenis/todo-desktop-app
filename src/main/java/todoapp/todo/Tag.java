@@ -4,8 +4,8 @@ import todoapp.exceptions.EmptyFieldException;
 
 /**
  * This class provide an ADT for the Tag object. A Tag object is 
- * characterized by a name and a color. The object is mutable.
- * ADT Invariants: the Tag object must have a non-empty name and a color.
+ * characterized by a text and a color. The object is mutable.
+ * ADT Invariants: the Tag object must have a non-empty text and a color.
  */
 public class Tag {
 
@@ -18,68 +18,71 @@ public class Tag {
 
 	/**
 	 * The object Tag implementation is done with:
-	 * - a String variable that represent the name
+	 * - a String variable that represent the text
 	 * - a Color variable that represent the color
 	 * 
-	 * INVARIANT: the name must be not null and not empty. The color must be 
+	 * INVARIANT: the text must be not null and not empty. The color must be 
 	 * not null
 	 */
-	private String name;
+	private String text;
 	private Color color;
 	
 	/**
-	 * Constructor that specify the name for the tag. The color is setted to 
+	 * Constructor that specify the text for the tag. The color is setted to 
 	 * the predefined one (blue).
-	 * @param name: the name of the Tag. REQUIRED to be not null and not empty.
-	 * @throws EmptyFieldException when the name is null or empty.
+	 * @param text: the text of the Tag. REQUIRED to be not null and not empty.
+	 * @throws NullPointerException when the text is null.
+	 * @throws EmptyFieldException when the text is empty.
 	 */
-	public Tag(String name) throws EmptyFieldException {
-		if (name == null || name.isEmpty()) {
-			throw new EmptyFieldException("A Tag must have a name.", "name", "A valid non-empty string.");
+	public Tag(String text) throws EmptyFieldException {
+		if (text == null) {
+			throw new NullPointerException();
+		} else if (text.isEmpty()) {
+			throw new EmptyFieldException("A Tag must have a text.", "text", "A non-empty string.");
 		}
 
-		this.name = name;
+		this.text = text;
 		this.color = Color.BLUE;
 	}
 
 	/**
-	 * Constructor that specify the name for the tag and its color.
-	 * @param name: the name of the Tag. REQUIRED to be not null and not empty.
+	 * Constructor that specify the text for the tag and its color.
+	 * @param text: the text of the Tag. REQUIRED to be not null and not empty.
 	 * @param color: the color of the tag. REQUIRED to be not null.
-	 * @throws EmptyFieldException when the name is null or empty, or when the 
-	 * color is null.
+	 * @throws NullPointerException when the text or the color is null.
+	 * @throws EmptyFieldException when the text is null or empty.
 	 */
-	public Tag(String name, Color color) throws EmptyFieldException {
-		if (name == null || name.isEmpty()) {
-			throw new EmptyFieldException("A Tag must have a name.", "name", "A valid non-empty string.");
-		} else if (color == null) {
-			throw new EmptyFieldException("A Tag must have a color.", "color", "A valid color.");
+	public Tag(String text, Color color) throws EmptyFieldException {
+		if (text == null || color == null){
+			throw new NullPointerException();
+		} else if (text.isEmpty()) {
+			throw new EmptyFieldException("A Tag must have a text.", "text", "A non-empty string.");
 		}
 
-		this.name = name;
+		this.text = text;
 		this.color = color;
 	}
 
 	/**
 	 * Copy constructor that creates a perfect copy of the Tag instance passed.
 	 * @param t: the Tag to copy. REQUIRED not null.
-	 * @throws EmptyFieldException when t is null.
+	 * @throws NullPointerException when t is null.
 	 */
-	public Tag(Tag t) throws EmptyFieldException  {
+	public Tag(Tag t) {
 		if (t == null) {
-			throw new EmptyFieldException("A Tag cannot be null.", "t", "A valid Tag instance.");
+			throw new NullPointerException();
 		}
 
-		this.name = t.name;
+		this.text = t.text;
 		this.color = t.color;
 	}
 
 	/**
-     * RETURN the name of the tag.
-     * @return the name of the tag as String.
+     * RETURN the text of the tag.
+     * @return the text of the tag as String.
      */
-	public String getName() {
-		return name;
+	public String getText() {
+		return text;
 	}
 
 	/**
@@ -91,15 +94,15 @@ public class Tag {
 	}
 
 	/**
-	 * MODIFY the name of the tag, changing it with a new one.
-	 * @param newName: the new name of the tag. REQUIRED to be not null and not 
+	 * MODIFY the text of the tag, changing it with a new one.
+	 * @param newText: the new text of the tag. REQUIRED to be not null and not 
 	 * empty.
 	 */
-	void changeName(String newName) {
+	void changeText(String newText) {
 
-		assert (newName != null && !newName.isEmpty()): "A Tag must have a name.";
+		assert (newText != null && !newText.isEmpty()): "A Tag must have a text.";
 
-		name = newName;
+		text = newText;
 	}
 
 	/**
@@ -116,7 +119,7 @@ public class Tag {
 	/**
 	 * Implement a comparison bethween two instances of Tag.
 	 * @param obj: the object to compare with.
-	 * @return true if obj and this have same name and color, false 
+	 * @return true if obj and this have same text and color, false 
 	 * otherwise.
 	 */
 	@Override
@@ -130,11 +133,11 @@ public class Tag {
 		}
 
 		Tag t = (Tag)obj;
-		if (this.name.length() != t.name.length()) {
+		if (this.text.length() != t.text.length()) {
 			return false;
 		}
 
-		if (this.name.compareTo(t.name) != 0) {
+		if (this.text.compareTo(t.text) != 0) {
 			return false;
 		} 
 

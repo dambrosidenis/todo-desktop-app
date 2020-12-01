@@ -46,6 +46,25 @@ class SourceArguments {
 
         return res.build();
 	}
+
+	static Stream<Tag> tagProvider() {
+		Collection<Arguments> ts = Arrays.asList((Arguments[])tagCreationParametersProvider().toArray(Arguments[]::new));
+		Stream.Builder<Tag> res = Stream.builder();
+
+		res.add(null);
+
+		Iterator<Arguments> tagIt = ts.iterator();
+		while (tagIt.hasNext()) {
+			Object[] tmp = tagIt.next().get();
+			String text = (String)tmp[0];
+			Color c = (Color)tmp[1];
+			try {
+				res.add(new Tag(text, c));
+			} catch (Exception e) {}
+		}
+
+		return res.build();
+	}
 	
 	/**
      * Return a stream of default data to use for test.
@@ -53,7 +72,7 @@ class SourceArguments {
      */
     static Stream<Arguments> todoCreationParametersProvider() {
 		Collection<String> ss = Arrays.asList(stringProvider().toArray(String[]::new));
-		Collection<Arguments> ts = Arrays.asList((Arguments[])tagCreationParametersProvider().toArray(Arguments[]::new));
+		Collection<Tag> ts = Arrays.asList((Tag[])tagProvider().toArray(Tag[]::new));
 		Stream.Builder<Arguments> res = Stream.builder();
 
 		Iterator<String> sit1 = ss.iterator();
@@ -61,11 +80,11 @@ class SourceArguments {
 			Iterator<String> sit2 = ss.iterator();
 			String first = sit1.next();
 			while (sit2.hasNext()) {
-				Iterator<Arguments> tit = ts.iterator();
+				Iterator<Tag> tagIt = ts.iterator();
 				String second = sit2.next();
-				while (tit.hasNext()) {
-					Object[] tag = tit.next().get();
-					res.add(Arguments.of(first, second, (String)tag[0], (Color)tag[1]));
+				while (tagIt.hasNext()) {
+					Tag tag = tagIt.next();
+					res.add(Arguments.of(first, second, tag));
 				}
 			}
 		}

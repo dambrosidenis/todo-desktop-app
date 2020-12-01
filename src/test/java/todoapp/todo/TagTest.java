@@ -15,49 +15,53 @@ class TagTest {
 
     /**
      * Method to test the constructor method.
-     * @param name: the name for the new Tag.
+     * @param text: the text for the new Tag.
 	 * @param color: the color for the new Tag.
      */
     @ParameterizedTest
     @MethodSource("todoapp.todo.SourceArguments#tagCreationParametersProvider")
-    @DisplayName("Testing the constructor method with both empty and filled name and color")
+    @DisplayName("Testing the constructor method with both empty and filled text and color")
     @Tag("Tag")
-    void constructorTagTesting(String name, Color color) {
-        if (name == null || name.isEmpty()) {
-            assertThrows(EmptyFieldException.class, () -> t = new todoapp.todo.Tag(name));
+    void constructorTagTesting(String text, Color color) {
+        if (text == null) {
+			assertThrows(NullPointerException.class, () -> t = new todoapp.todo.Tag(text));
+		} else if (text.isEmpty()) {
+            assertThrows(EmptyFieldException.class, () -> t = new todoapp.todo.Tag(text));
         } else {
 			if (color == null) {
-				assertThrows(EmptyFieldException.class, () -> t = new todoapp.todo.Tag(name, color));
+				assertThrows(NullPointerException.class, () -> t = new todoapp.todo.Tag(text, color));
 			} else {
 				try {
-					t = new todoapp.todo.Tag(name, color);
-				} catch (EmptyFieldException efe) {
+					t = new todoapp.todo.Tag(text, color);
+				} catch (Exception e) {
 					fail("Should not be thrown!");
 				}
-				assertEquals(name, t.getName());
+				assertEquals(text, t.getText());
 				assertEquals(color, t.getColor());
 			}
         }
 	}
 
 	/**
-     * Method to test the changeName method.
-     * @param name: the new name for the Tag.
+     * Method to test the changeText method.
+     * @param text: the new text for the Tag.
      */
     @ParameterizedTest
     @MethodSource("todoapp.todo.SourceArguments#stringProvider")
-    @DisplayName("Testing the changeName method with both empty and filled name")
+    @DisplayName("Testing the changeText method with both empty and filled text")
     @Tag("Tag")
-    void changeNameTagTesting(String name) {
+    void changeTextTagTesting(String text) {
 		try {
 			t = new todoapp.todo.Tag("Before");
-		} catch (EmptyFieldException efe) { }
+		} catch (Exception e) {
+			fail("Should not be thrown!");
+		}
 
-        if (name == null || name.isEmpty()) {
-            assertThrows(AssertionError.class, () -> t.changeName(name));
+        if (text == null || text.isEmpty()) {
+            assertThrows(AssertionError.class, () -> t.changeText(text));
         } else {	
-			t.changeName(name);
-			assertEquals(name, t.getName());
+			t.changeText(text);
+			assertEquals(text, t.getText());
         }
 	}
 
@@ -72,7 +76,9 @@ class TagTest {
     void changeColorTagTesting(Color color) {
 		try {
 			t = new todoapp.todo.Tag("Test", Color.BLACK);
-		} catch (EmptyFieldException efe) { }
+		} catch (Exception e) {
+			fail("Should not be thrown!");
+		}
 
         if (color == null) {
             assertThrows(AssertionError.class, () -> t.changeColor(color));
@@ -84,29 +90,27 @@ class TagTest {
 
 	/**
      * Method to test the equals method.
-	 * @param name: the name of the Tag to compare.
-     * @param color: the color of the Tag to compare.
+	 * @param tag: the Tag instance to test.
      */
     @ParameterizedTest
-    @MethodSource("todoapp.todo.SourceArguments#tagCreationParametersProvider")
+    @MethodSource("todoapp.todo.SourceArguments#tagProvider")
     @DisplayName("Testing the equals method with a predefined test Tag")
     @Tag("Tag")
-	void equalsTesting(String name, Color color) {
+	void equalsTesting(todoapp.todo.Tag tag) {
 		todoapp.todo.Tag test = null;
 		try {
 			test = new todoapp.todo.Tag("Test", Color.RED);
-		} catch (EmptyFieldException efe) {}
-		if (name == null || name.isEmpty()) {
-			assertEquals(false, test.equals(null));
-		} else {
-			try {
-				t = new todoapp.todo.Tag(name, color);
-				if (color == null) {
-					assertEquals(false, test.equals(t));
+			if (tag == null) {
+				assertEquals(false, test.equals(tag));
+			} else {
+				if (tag.getColor() != Color.RED) {
+					assertEquals(false, test.equals(tag));
 				} else {
-					assertEquals(true, test.equals(t));
+					assertEquals(true, test.equals(tag));
 				}
-			} catch (EmptyFieldException efe) {}
+			}
+		} catch (Exception e) {
+			fail("Should not be thrown!");
 		}
 	}
 }
