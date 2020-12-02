@@ -4,6 +4,8 @@ import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.Iterator;
 
+import lombok.EqualsAndHashCode;
+
 import todoapp.exceptions.EmptyFieldException;
 
 import java.util.ArrayList;
@@ -15,6 +17,7 @@ import java.util.ArrayList;
  * ADT Invariants: the ToDo object must have a non-empty title and a creation 
  * date. A tag, when added, must be not empty.
  */
+@EqualsAndHashCode
 public class ToDo {
 
 	/**
@@ -33,6 +36,9 @@ public class ToDo {
     private final LocalDateTime creation;
 	private ArrayList<Tag> tags;
 
+	private static final String TITLE_EXCEPTION = "A ToDo must have a title.";
+	private static final String TITLE_VALID_VALUE = "A non-empty string.";
+
 	/**
 	 * Constructor that specify a tag that the new ToDo should have.
 	 * @param title: the title of the ToDo. REQUIRED to be not null and not 
@@ -47,7 +53,7 @@ public class ToDo {
 		if (title == null || tag == null) {
 			throw new NullPointerException();
 		} else if (title.isEmpty()) {
-			throw new EmptyFieldException("A ToDo must have a title.", "title", "A non-empty string.");
+			throw new EmptyFieldException(TITLE_EXCEPTION, "title", TITLE_VALID_VALUE);
 		}
 
         this.title = title;
@@ -55,6 +61,39 @@ public class ToDo {
 		this.creation = LocalDateTime.now();
 		this.tags = new ArrayList<Tag>();
         this.tags.add(new Tag(tag));
+	}
+
+	/**
+	 * Constructor that creates a new ToDo with the Collection of Tag 
+	 * specified. If a Tag is present more that once, only the first instance 
+	 * is considered.
+	 * @param title: the title of the ToDo. REQUIRED to be not null and not 
+	 * empty.
+	 * @param description: the description of the ToDo.
+	 * @param tags: the Tag Collection base for the new ToDo. REQUIRED not null.
+	 * @throws NullPointerException when title or tags is null.
+	 * @throws EmptyFieldException when the title is empty.
+	 */
+    public ToDo(String title, String description, Collection<Tag> tags) throws EmptyFieldException {
+
+		if (title == null || tags == null) {
+			throw new NullPointerException();
+		} else if (title.isEmpty()) {
+			throw new EmptyFieldException(TITLE_EXCEPTION, "title", TITLE_VALID_VALUE);
+		}
+
+        this.title = title;
+        this.description = description;
+		this.creation = LocalDateTime.now();
+		this.tags = new ArrayList<Tag>();
+
+		Iterator<Tag> tagIt = tags.iterator();
+		while (tagIt.hasNext()) {
+			Tag t = tagIt.next();
+			if (!this.tags.contains(t)) {
+				this.tags.add(t);
+			}
+		}
 	}
 
 	/**
@@ -70,7 +109,7 @@ public class ToDo {
 		if (title == null) {
 			throw new NullPointerException();
 		} else if (title.isEmpty()) {
-			throw new EmptyFieldException("A ToDo must have a title.", "title", "A non-empty string.");
+			throw new EmptyFieldException(TITLE_EXCEPTION, "title", TITLE_VALID_VALUE);
 		}
 
         this.title = title;
@@ -78,6 +117,8 @@ public class ToDo {
         this.creation = LocalDateTime.now();
         this.tags = new ArrayList<Tag>();
 	}
+
+	
 	
 	/**
 	 * Copy constructor that creates a perfect copy of the ToDo instance passed.
@@ -92,7 +133,7 @@ public class ToDo {
 
         this.title = td.title;
         this.description = td.description;
-        this.creation = LocalDateTime.now();
+        this.creation = td.creation;
 		this.tags = new ArrayList<Tag>();
 		Iterator<Tag> it = td.tags.iterator();
 		while (it.hasNext()) {
@@ -168,12 +209,11 @@ public class ToDo {
 		
 		Tag t = new Tag(newTag);
 
-		// If the tag created is already in the list return
-		if (tags.contains(t)) {
+		if (this.tags.contains(t)) {
 			return false;
 		}
 
-		return tags.add(t);
+		return this.tags.add(t);
     }
 	
 	/**
@@ -187,11 +227,11 @@ public class ToDo {
 
 		assert (t != null): "A ToDo valid tag must be not null.";
 
-		if (!tags.contains(t)) {
+		if (!this.tags.contains(t)) {
 			return false;
 		}
 
-		tags.remove(t);
+		this.tags.remove(t);
         return true;
     }
     
@@ -202,65 +242,10 @@ public class ToDo {
      */
     public String[] getData() {
         return new String[] {
-			title,
-			description,
-			creation.toString()
+			this.title,
+			this.description,
+			this.creation.toString()
 		};
-	}
-
-	/**
-	 * Implement a comparison bethween two instances of ToDo.
-	 * @param obj: the object to compare with.
-	 * @return true if obj and this have same title, description and tags; false otherwise.
-	 */
-	@Override
-	public boolean equals(Object obj) {
-		if (obj == null) {
-			return false;
-		}
-
-		if (obj.getClass() != ToDo.class) {
-			return false;
-		}
-
-		ToDo td = (ToDo)obj;
-		if (this.title.length() != td.title.length()) {
-			return false;
-		}
-
-		if (this.title.compareTo(td.title) != 0) {
-			return false;
-		}
-
-		if (this.description == null) {
-			if (td.description != null) {
-				return false;
-			}
-		} else {
-			if (td.description == null) {
-				return false;
-			}
-
-			if (this.description.length() != td.description.length()) {
-				return false;
-			}
-	
-			if (this.description.compareTo(td.description) != 0) {
-				return false;
-			}
-		}
-
-		if (this.tags.size() != td.tags.size()) {
-			return false;
-		}
-
-		for (int i = 0; i < this.tags.size(); i++) {
-			if (!this.tags.contains(td.tags.get(i))) {
-				return false;
-			}
-		}
-
-		return true;
 	}
 	
 }   // class ToDo

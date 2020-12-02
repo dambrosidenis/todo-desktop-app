@@ -118,41 +118,4 @@ class ToDoTest {
 			assertEquals(false, td.getTags().contains(test));
 		}
 	}
-
-	/**
-     * Method to test the equals method.
-	 * @param todoTitle: the name of the ToDo to compare.
-     * @param todoDescription: the description of the ToDo to compare.
-	 * @param tag: the Tag to compare.
-     */
-    @ParameterizedTest
-    @MethodSource("todoapp.todo.SourceArguments#todoCreationParametersProvider")
-    @DisplayName("Testing the equals method with a predefined test ToDo")
-    @Tag("ToDo")
-	void equalsTesting(String todoTitle, String todoDescription, todoapp.todo.Tag tag) {
-		ToDo test = null;
-		try {
-			test = new ToDo("Test", "", new todoapp.todo.Tag("Test"));
-		} catch (Exception e) {
-			fail("Should not be thrown!");
-		}
-		if (todoTitle == null || todoTitle.isEmpty()) {
-			assertEquals(false, test.equals(null));
-		} else {
-			try {
-				if (tag == null) {
-					td = new ToDo(todoTitle, todoDescription);
-				} else {
-					td = new ToDo(todoTitle, todoDescription, tag);
-				}
-			} catch (Exception e) {
-				fail("Should not be thrown!");
-			}
-			if (todoTitle.compareTo("Test") == 0 && todoDescription != null && todoDescription.isEmpty() && tag != null && tag.getColor() == Color.BLUE) {
-				assertEquals(true, test.equals(td));
-			} else {
-				assertEquals(false, test.equals(td));
-			}
-		}
-	}
 }

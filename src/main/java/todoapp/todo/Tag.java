@@ -1,5 +1,7 @@
 package todoapp.todo;
 
+import lombok.EqualsAndHashCode;
+
 import todoapp.exceptions.EmptyFieldException;
 
 /**
@@ -7,6 +9,7 @@ import todoapp.exceptions.EmptyFieldException;
  * characterized by a text and a color. The object is mutable.
  * ADT Invariants: the Tag object must have a non-empty text and a color.
  */
+@EqualsAndHashCode
 public class Tag {
 
 	/**
@@ -27,6 +30,8 @@ public class Tag {
 	private String text;
 	private Color color;
 	
+	private static final String TEXT_EXCEPTION = "A Tag must have a text.";
+	
 	/**
 	 * Constructor that specify the text for the tag. The color is setted to 
 	 * the predefined one (blue).
@@ -38,7 +43,7 @@ public class Tag {
 		if (text == null) {
 			throw new NullPointerException();
 		} else if (text.isEmpty()) {
-			throw new EmptyFieldException("A Tag must have a text.", "text", "A non-empty string.");
+			throw new EmptyFieldException(TEXT_EXCEPTION, "text", "A non-empty string.");
 		}
 
 		this.text = text;
@@ -56,7 +61,7 @@ public class Tag {
 		if (text == null || color == null){
 			throw new NullPointerException();
 		} else if (text.isEmpty()) {
-			throw new EmptyFieldException("A Tag must have a text.", "text", "A non-empty string.");
+			throw new EmptyFieldException(TEXT_EXCEPTION, "text", "A non-empty string.");
 		}
 
 		this.text = text;
@@ -82,7 +87,7 @@ public class Tag {
      * @return the text of the tag as String.
      */
 	public String getText() {
-		return text;
+		return this.text;
 	}
 
 	/**
@@ -90,7 +95,7 @@ public class Tag {
      * @return the color of the tag.
      */
 	public Color getColor() {
-		return color;
+		return this.color;
 	}
 
 	/**
@@ -100,9 +105,9 @@ public class Tag {
 	 */
 	void changeText(String newText) {
 
-		assert (newText != null && !newText.isEmpty()): "A Tag must have a text.";
+		assert (newText != null && !newText.isEmpty()): TEXT_EXCEPTION;
 
-		text = newText;
+		this.text = newText;
 	}
 
 	/**
@@ -113,39 +118,7 @@ public class Tag {
 
 		assert (newColor != null): "A Tag must have a color.";
 
-		color = newColor;
-	}
-
-	/**
-	 * Implement a comparison bethween two instances of Tag.
-	 * @param obj: the object to compare with.
-	 * @return true if obj and this have same text and color, false 
-	 * otherwise.
-	 */
-	@Override
-	public boolean equals(Object obj) {
-		if (obj == null) {
-			return false;
-		}
-
-		if (obj.getClass() != Tag.class) {
-			return false;
-		}
-
-		Tag t = (Tag)obj;
-		if (this.text.length() != t.text.length()) {
-			return false;
-		}
-
-		if (this.text.compareTo(t.text) != 0) {
-			return false;
-		} 
-
-		if (this.color != t.color) {
-			return false;
-		}
-
-		return true;
+		this.color = newColor;
 	}
 
 }	// class Tag

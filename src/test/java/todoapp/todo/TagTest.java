@@ -87,30 +87,4 @@ class TagTest {
 			assertEquals(color, t.getColor());
         }
 	}
-
-	/**
-     * Method to test the equals method.
-	 * @param tag: the Tag instance to test.
-     */
-    @ParameterizedTest
-    @MethodSource("todoapp.todo.SourceArguments#tagProvider")
-    @DisplayName("Testing the equals method with a predefined test Tag")
-    @Tag("Tag")
-	void equalsTesting(todoapp.todo.Tag tag) {
-		todoapp.todo.Tag test = null;
-		try {
-			test = new todoapp.todo.Tag("Test", Color.RED);
-			if (tag == null) {
-				assertEquals(false, test.equals(tag));
-			} else {
-				if (tag.getColor() != Color.RED) {
-					assertEquals(false, test.equals(tag));
-				} else {
-					assertEquals(true, test.equals(tag));
-				}
-			}
-		} catch (Exception e) {
-			fail("Should not be thrown!");
-		}
-	}
 }
