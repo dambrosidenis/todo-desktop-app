@@ -19,7 +19,7 @@ class Backup {
         StringBuilder dataReadyToBackup = new StringBuilder("{\n");
         int listLength = currentToDoList.size();
         for (int i = 0; i < listLength; i++) {
-            dataReadyToBackup.append(dataReadyToBackup + encodeToDoToJSON(currentToDoList.getToDoData(i)));
+            //dataReadyToBackup.append(dataReadyToBackup + encodeToDoToJSON(currentToDoList.getToDoData(i)));
         }
         dataReadyToBackup.append("\n}");
 

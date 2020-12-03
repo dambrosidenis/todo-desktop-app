@@ -1,163 +1,300 @@
 package todoapp.todo;
 
 import todoapp.exceptions.EmptyFieldException;
-import java.util.Collection;
-import java.util.ArrayList;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+
+/**
+ * This class provide an ADT for a list of ToDo.
+ * INVARIANT: the list doesn't contain duplicates.
+ */
 class ToDoList {
 
-    private ArrayList<ToDo> loadedToDos;
-    private final String emptyTitleErrorString = "A ToDo title can't be empty";
+	/**
+	 * The object ToDoList implementation is done with a HashMap with:
+	 * - key: the Integer returned by the method ToDo.hashCode()
+	 * - value: the ToDo instance
+	 * INVARIANT: loadedToDos must be not null, must not contains null objects 
+	 * or duplicates.
+	 * NOTE: two ToDos with same title, description and tags aren't equal 
+	 * because the creation time is never the same
+	 */
+    private Map<ToDo, ToDo> loadedToDos;
 
-    ToDoList() {
-        this.loadedToDos = new ArrayList<ToDo>();
-    }
+	/**
+	 * Constructor that creates a new empty list.
+	 */
+    public ToDoList() {
+		this.loadedToDos = new HashMap<ToDo, ToDo>();
+	}
+	
+	/**
+	 * Constructor that creates a new list with the ToDo specified.
+	 * @param todo: todo to add to the new list. REQUIRED not null.
+	 * @throws NullPointerException when todo is null.
+	 */
+    public ToDoList(ToDo todo) {
+		if (todo == null) {
+			throw new NullPointerException();
+		}
 
-    /**
-     * MODIFY loadedToDos by adding a new ToDo instance.
-     * @param toDoTitle is the title of the ToDo. Required not empty.
-     * @param toDoDescription is the description of the ToDo. At least it has to be an empty String.
-     * @param toDoTags is the list of tags of the ToDo. At least it has to be empty.
-     * @throws EmptyStringException when the ToDo title is empty. In this case the ToDo wouldn't be added.
+		this.loadedToDos = new HashMap<ToDo, ToDo>();
+		loadedToDos.put(todo, todo);
+	}
+	
+	/**
+	 * Copy constructor that creates a perfect copy of the ToDoList instance 
+	 * passed.
+	 * @param todolist: the ToDoList to copy. REQUIRED not null.
+	 * @throws NullPointerException when todolist is null.
+	 */
+    public ToDoList(ToDoList todolist) {
+		if (todolist == null) {
+			throw new NullPointerException();
+		}
+		
+		this.loadedToDos = new HashMap<ToDo, ToDo>();
+		this.loadedToDos.putAll(todolist.loadedToDos);
+	}
+	
+	/**
+	 * Constructor that creates a new list from the Collection of ToDo 
+	 * specified. If a ToDo is present more that once, only the first instance 
+	 * is considered.
+	 * @param todoColl: the ToDo Collection base for the new list. REQUIRED not 
+	 * null.
+	 * @throws NullPointerException when todoColl is null.
+	 */
+    public ToDoList(Collection<ToDo> todoColl) {
+		if (todoColl == null) {
+			throw new NullPointerException();
+		}
+		
+		this.loadedToDos = new HashMap<ToDo, ToDo>();
+		Iterator<ToDo> todoIt = todoColl.iterator();
+		while (todoIt.hasNext()) {
+			ToDo todo = new ToDo(todoIt.next());
+			if (!this.loadedToDos.containsKey(todo)) {
+				this.loadedToDos.put(todo, todo);
+			}
+		}
+	}
+	
+	/**
+     * Check whether the ToDo passed is present in the list or not.
+     * @param todo: the ToDo instance to search in the list. REQUIRED to be not 
+	 * null.
+     * @return true if the ToDo is in, false otherwise.
+     * @throws NullPointerException when todo is null.
      */
-    void addToDo(String toDoTitle, String toDoDescription, Collection<String> toDoTags) throws EmptyFieldException{
+    public boolean contains(ToDo todo) {
 
-        if (toDoTitle == null || toDoTitle.isEmpty()) {
-            throw new EmptyFieldException(emptyTitleErrorString);
+        if (todo == null) {
+            throw new NullPointerException();
         }
 
-        loadedToDos.add(new ToDo(toDoTitle, toDoDescription, toDoTags));
+        return this.loadedToDos.containsKey(todo);
+    }
+	
+	/**
+     * MODIFY this by adding a new ToDo to the list (if todo not already exists)
+     * @param newToDo: the ToDo instance to add to the list. REQUIRED to be not 
+	 * null.
+     * @return true if the ToDo is added, false if todo was already present in 
+	 * the list.
+     * @throws NullPointerException when todo is null. In this case nothing is 
+	 * modified.
+     */
+    public boolean addToDo(ToDo newToDo) {
+
+        if (newToDo == null) {
+            throw new NullPointerException();
+        }
+
+        if (this.contains(newToDo)) {
+			return false;
+		} else {
+			this.loadedToDos.put(newToDo, new ToDo(newToDo));
+			return true;
+		}
+    }
+	
+	/**
+     * MODIFY this by deleting the ToDo specified from the list (if todo 
+	 * already exists in the list).
+     * @param todo: instance of ToDo that has to be removed from the list. 
+	 * REQUIRED to be not null.
+	 * @return true if todo is correctly removed, false if todo wasn't already 
+	 * present in the list.
+	 * @throws NullPointerException if todo is null. In this case nothing is 
+	 * modified.
+     */
+    public boolean removeToDo(ToDo todo) {
+
+        if (todo == null) {
+            throw new NullPointerException();
+        }
+
+		if (!this.contains(todo)) {
+			return false;
+		}
+
+        return this.loadedToDos.remove(todo, todo);
+    }
+	
+	/**
+     * MODIFY this by changing the title of the ToDo specified (if todo already 
+	 * exists in the list). The ToDo passed wouldn't be modified.
+     * @param todo: instance of ToDo that has to be modified in the list. 
+	 * REQUIRED to be not null.
+     * @param newTitle: the new title. REQUIRED to be not null and not empty.
+	 * @return a copy of the modified ToDo if the ToDo was present in the list 
+	 * and was successfully modified, or null if todo is not present in the 
+	 * list.
+	 * @throws NullPointerException when newTitle or todo is null. In this case 
+	 * nothing is modified.
+     * @throws EmptyFieldException when newTitle is empty. In this case nothing 
+	 * is modified.
+     */
+    public ToDo modifyToDoTitle(ToDo todo, String newTitle) throws EmptyFieldException {
+
+        if (newTitle == null || todo == null) {
+			throw new NullPointerException();
+		} else if (newTitle.isEmpty()) {
+            throw new EmptyFieldException("A ToDo title can't be empty.", "newTitle", "A non-empty string.");
+        }
+
+		if (!this.contains(todo)) {
+			return null;
+		} else {
+			this.removeToDo(todo);
+			ToDo newTodo = new ToDo(todo);
+			newTodo.setTitle(newTitle);
+			this.addToDo(newTodo);
+			return new ToDo(newTodo);
+		}
+    }
+	
+	/**
+     * MODIFY this by changing the description of the ToDo specified (if todo 
+	 * already exists in the list). The ToDo passed wouldn't be modified.
+     * @param todo: instance of ToDo that has to be modified in the list. 
+	 * REQUIRED to be not null.
+     * @param newDescription: the new description.
+	 * @return a copy of the modified ToDo if the ToDo was present in the list 
+	 * and was successfully modified, or null if todo is not present in the 
+	 * list.
+	 * @throws NullPointerException when todo is null. In this case nothing 
+	 * is modified.
+     */
+    public ToDo modifyToDoDescription(ToDo todo, String newDescription){
+        if (todo == null) {
+			throw new NullPointerException();
+		}
+
+		if (!this.contains(todo)) {
+			return null;
+		} else {
+			this.removeToDo(todo);
+			ToDo newTodo = new ToDo(todo);
+			newTodo.setDescription(newDescription);
+			this.addToDo(newTodo);
+			return new ToDo(newTodo);
+		}
+    }
+	
+	/**
+	 * MODIFY this by adding a new Tag to the ToDo specified (if todo already 
+	 * exists in the list). If the ToDo already has that Tag, nothing will be 
+	 * modified. The ToDo passed wouldn't be modified in any case.
+     * @param todo: instance of ToDo that has to be modified in the list. 
+	 * REQUIRED to be not null.
+	 * @param newTag: the tag to add. REQUIRED to be not null.
+	 * @return a copy of the modified ToDo if the Tag is successfully added, 
+	 * the same ToDo if the Tag is already present, or null if todo is not 
+	 * present in the list.
+	 * @throws NullPointerException when todo or newTag is null. In this case 
+	 * nothing is modified.
+     */
+    public ToDo addToDoTag(ToDo todo, Tag newTag) {
+
+        if (todo == null || newTag == null) {
+			throw new NullPointerException();
+		}
+
+		if (!this.contains(todo)) {
+			return null;
+		} else {
+			ToDo newTodo = new ToDo(todo);
+			if(newTodo.addTag(newTag)) {
+				this.removeToDo(todo);
+				this.addToDo(newTodo);
+				return new ToDo(newTodo);
+			} else {
+				return todo;
+			}
+		}
+    }
+	
+	/**
+	 * MODIFY this by deleting a new Tag to the ToDo specified (if todo already 
+	 * exists in the list). If the ToDo doesn't have that Tag, nothing will be 
+	 * modified. The ToDo passed wouldn't be modified in any case.
+     * @param todo: instance of ToDo that has to be modified in the list. 
+	 * REQUIRED to be not null.
+	 * @param newTag: the tag to delete. REQUIRED to be not null.
+	 * @return a copy of the modified ToDo if the Tag is successfully deleted, 
+	 * the same ToDo if the Tag wasn't already present, or null if todo is not 
+	 * present in the list.
+	 * @throws NullPointerException when todo or newTag is null. In this case 
+	 * nothing is modified.
+     */
+    public ToDo deleteToDoTag(ToDo todo, Tag tag) {
+
+        if (todo == null || tag == null) {
+			throw new NullPointerException();
+		}
+
+		if (!this.contains(todo)) {
+			return null;
+		} else {
+			ToDo newTodo = new ToDo(todo);
+			if(newTodo.deleteTag(tag)) {
+				this.removeToDo(todo);
+				this.addToDo(newTodo);
+				return new ToDo(newTodo);
+			} else {
+				return todo;
+			}
+		}
     }
     
     /**
-     * MODIFY loadedToDos by adding a new ToDo instance.
-     * @param toDoTitle is the title of the ToDo. Required not empty.
-     * @param toDoDescription is the description of the ToDo. At least it has to be an empty String.
-     * @throws EmptyStringException when the ToDo title is empty. In this case the ToDo wouldn't be added.
+     * Get a copy of all the ToDos of the list.
+     * @return a Collection with all the ToDo. If the list is empty the 
+	 * Collection returned will be empty.
      */
-    void addToDo(String toDoTitle, String toDoDescription) throws EmptyFieldException {
+    public Collection<ToDo> getData() {
+		Collection<ToDo> res = new ArrayList<ToDo>();
+		Iterator<ToDo> it = this.loadedToDos.values().iterator();
+		
+		while (it.hasNext()) {
+			res.add(new ToDo(it.next()));
+		}
 
-        if (toDoTitle == null || toDoTitle.isEmpty()) {
-            throw new EmptyFieldException(emptyTitleErrorString);
-        }
-
-        loadedToDos.add(new ToDo(toDoTitle, toDoDescription));
-    }
-
-    /**
-     * MODIFY loadedToDos by deleting a given ToDo instance.
-     * @param deletedToDo is the index of the instance that has to be removed. Required a valid instance contained in loadedToDos.
-     */
-    void removeToDo(int deletedToDoIndex) {
-
-        if (deletedToDoIndex < 0 || deletedToDoIndex >= loadedToDos.size()) {
-            throw new IndexOutOfBoundsException();
-        }
-
-        ToDo deletedToDo = recogniseToDo(deletedToDoIndex);
-        loadedToDos.remove(deletedToDo);
-    }
-
-    /**
-     * MODIFY a ToDo by changing its title.
-     * @param modifiedToDo is the index of the instance that has to be modified. Required a valid instance contained in loadedToDos.
-     * @param newTitle is the modified title of the todo. Required a not empty String.
-     * @throws EmptyFieldException when the ToDo title is empty. In this case the ToDo wouldn't be modified.
-     */
-    void modifyToDoTitle(int modifiedToDoIndex, String newTitle) throws EmptyFieldException {
-
-        if (modifiedToDoIndex < 0 || modifiedToDoIndex >= loadedToDos.size()) {
-            throw new IndexOutOfBoundsException();
-        } else if (newTitle == null || newTitle.isEmpty()) {
-            throw new EmptyFieldException(emptyTitleErrorString);
-        }
-
-        ToDo modifiedToDo = recogniseToDo(modifiedToDoIndex);
-        modifiedToDo.setTitle(newTitle);
-    }
-
-    /**
-     * MODIFY a ToDo by changing its description.
-     * @param modifiedToDo is the index of the instance that has to be modified. Required a valid instance contained in loadedToDos.
-     * @param newDescription is the modified description of the todo.
-     */
-    void modifyToDoDescription(int modifiedToDoIndex, String newDescription){
-
-        if (modifiedToDoIndex < 0 || modifiedToDoIndex >= loadedToDos.size()) {
-            throw new IndexOutOfBoundsException();
-        }
-
-        ToDo modifiedToDo = recogniseToDo(modifiedToDoIndex);
-        modifiedToDo.setDescription(newDescription);
-    }
-
-    /**
-     * MODIFY a ToDo by adding a tag to its list if not already in.
-     * @param modifiedToDo is the intex of the instance that has to be modified. Required a valid instance contained in loadedToDos.
-     * @param newTag is the new tag of the todo.
-     * @throws EmptyFieldException when newTag is null or empty. In this case the tag wouldn't be added.
-     */
-    void addToDoTag(int modifiedToDoIndex, String newTag) throws EmptyFieldException {
-
-        if (modifiedToDoIndex < 0 || modifiedToDoIndex >= loadedToDos.size()) {
-            throw new IndexOutOfBoundsException();
-        } else if (newTag == null || newTag.isEmpty()) {
-            throw new EmptyFieldException("A ToDo tag that is going to be added can't be empty");
-        }
-
-        ToDo modifiedToDo = recogniseToDo(modifiedToDoIndex);
-        if (!modifiedToDo.getTags().contains(newTag)) {
-            modifiedToDo.addTag(newTag);
-        }
-    }
-
-    /**
-     * MODIFY a ToDo by deleting a tag from its list if it already exists.
-     * @param modifiedToDo is the index of the instance that has to be modified. Required a valid instance contained in loadedToDos.
-     * @param deletedTag is the tag of the todo that has to be deleted.
-     */
-    void deleteToDoTag(int modifiedToDoIndex, String deletedTag) {
-
-        if (modifiedToDoIndex < 0 || modifiedToDoIndex >= loadedToDos.size()) {
-            throw new IndexOutOfBoundsException();
-        }
-
-        ToDo modifiedToDo = recogniseToDo(modifiedToDoIndex);
-        if (!modifiedToDo.getTags().contains(deletedTag)) {
-            modifiedToDo.deleteTag(deletedTag);
-        }
-    }
-    
-    /**
-     * Get a ToDo based on its index in loadedToDos
-     * @param toDoIndex is the index of the desired ToDo.
-     * @return the reference to the ToDo.
-     */
-    private ToDo recogniseToDo(int toDoIndex) {
-        return loadedToDos.get(toDoIndex);
-    }
-    
-    /**
-     * Get all data about a ToDo.
-     * @param toDoIndex is the index of the desired ToDo.
-     * @return a string array containing, in order: the title, the description, the date of creation and the tags of the ToDo.
-     */
-    String[] getToDoData(int toDoIndex) {
-
-        if (toDoIndex < 0 || toDoIndex >= loadedToDos.size()) {
-            throw new IndexOutOfBoundsException();
-        }
-
-        ToDo spotlightedToDo = recogniseToDo(toDoIndex);
-        return spotlightedToDo.getData();
+        return res;
     }
     
     
     /**
-     * Get the number of elements contained in loadedToDos.
-     * @return the equivalent to loadedToDos' size.
+     * Get the number of ToDo contained in the list.
+     * @return number of ToDo.
      */
-    int size() {
-        return loadedToDos.size();
+    public int size() {
+        return this.loadedToDos.size();
     }
 }   // class ToDoList
