@@ -296,5 +296,14 @@ class ToDoList {
      */
     public int size() {
         return this.loadedToDos.size();
-    }
+	}
+	
+	/**
+	 * @return a standard iterator over the todos of this list instance. The 
+	 * iterator is not sensible to mutations of this list.
+	 */
+	public Iterator<ToDo> iterator() {
+		return this.loadedToDos.values().iterator();
+	}
+
 }   // class ToDoList

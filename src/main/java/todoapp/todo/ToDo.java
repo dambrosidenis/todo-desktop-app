@@ -247,5 +247,13 @@ public class ToDo {
 			this.creation.toString()
 		};
 	}
+
+	/**
+	 * @return a standard iterator over the tags of this ToDo instance. The 
+	 * iterator is not sensible to mutations of this ToDo.
+	 */
+	public Iterator<Tag> iterator() {
+		return this.tags.iterator();
+	}
 	
 }   // class ToDo
