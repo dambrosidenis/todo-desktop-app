@@ -6,8 +6,6 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.api.DisplayName;
 import static org.junit.jupiter.api.Assertions.*;
 
-import todoapp.exceptions.EmptyFieldException;
-
 class ToDoTest {
 
 	private ToDo td;

@@ -2,22 +2,12 @@ package todoapp.todo;
 
 import lombok.EqualsAndHashCode;
 
-import todoapp.exceptions.EmptyFieldException;
-
 /**
- * This class provide an ADT for the Tag object. A Tag object is 
+ * This class provide an ADT for a Tag. A Tag object is a simple Attribute 
  * characterized by a text and a color. The object is mutable.
- * ADT Invariants: the Tag object must have a non-empty text and a color.
  */
 @EqualsAndHashCode
-public class Tag {
-
-	/**
-	 * All the colors a tag can assume.
-	 */
-	public enum Color {
-		RED, BLUE, YELLOW, GREEN, WHITE, BLACK, GRAY, PURPLE, BROWN, ORANGE
-	}
+public class Tag implements Attribute {
 
 	/**
 	 * The object Tag implementation is done with:
@@ -25,7 +15,7 @@ public class Tag {
 	 * - a Color variable that represent the color
 	 * 
 	 * INVARIANT: the text must be not null and not empty. The color must be 
-	 * not null
+	 * not null.
 	 */
 	private String text;
 	private Color color;
@@ -35,7 +25,7 @@ public class Tag {
 	/**
 	 * Constructor that specify the text for the tag. The color is setted to 
 	 * the predefined one (blue).
-	 * @param text: the text of the Tag. REQUIRED to be not null and not empty.
+	 * @param text: the text of the Tag. Required to be not null and not empty.
 	 * @throws NullPointerException when the text is null.
 	 * @throws EmptyFieldException when the text is empty.
 	 */
@@ -83,40 +73,49 @@ public class Tag {
 	}
 
 	/**
-     * RETURN the text of the tag.
-     * @return the text of the tag as String.
-     */
+	 * @return the text that is contained inside this tag.
+	 */
+	@Override
 	public String getText() {
 		return this.text;
 	}
 
 	/**
-     * RETURN the color of the tag.
-     * @return the color of the tag.
-     */
+	 * @return the color associated with this tag.
+	 */
+	@Override
 	public Color getColor() {
 		return this.color;
 	}
 
 	/**
-	 * MODIFY the text of the tag, changing it with a new one.
-	 * @param newText: the new text of the tag. REQUIRED to be not null and not 
-	 * empty.
+	 * Modify the text of the tag, changing it with a new one.
+	 * @param newText: the new text of the tag. Required to be not null and not empty.
+	 * @throws NullPointerException if newText is null.
+	 * @throws EmptyFieldException if newText is an empty string.
 	 */
-	void changeText(String newText) {
+	public void changeText(String newText) throws EmptyFieldException {
 
-		assert (newText != null && !newText.isEmpty()): TEXT_EXCEPTION;
+		if (newText == null) {
+			throw new NullPointerException();
+		} else if (newText.isEmpty()) {
+			throw new EmptyFieldException(TEXT_EXCEPTION, "newText", "A non-empty string.");
+		}
 
 		this.text = newText;
 	}
 
 	/**
-	 * MODIFY the color of the tag, changing it with a new one.
-	 * @param newColor: the new color of the tag. REQUIRED to be not null.
+	 * Change the color associated with this tag with a new one.
+	 * @param newColor: the new color for the tag. Required to be not null.
+	 * @throws NullPointerException if newColor is null.
 	 */
-	void changeColor(Color newColor) {
+	@Override
+	public void changeColor(Color newColor) {
 
-		assert (newColor != null): "A Tag must have a color.";
+		if (newColor == null) {
+			throw new NullPointerException();
+		}
 
 		this.color = newColor;
 	}

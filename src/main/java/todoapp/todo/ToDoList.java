@@ -1,7 +1,5 @@
 package todoapp.todo;
 
-import todoapp.exceptions.EmptyFieldException;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;

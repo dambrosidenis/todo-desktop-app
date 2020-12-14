@@ -6,8 +6,6 @@ import java.util.Iterator;
 
 import lombok.EqualsAndHashCode;
 
-import todoapp.exceptions.EmptyFieldException;
-
 import java.util.ArrayList;
 
 /**

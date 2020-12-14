@@ -7,7 +7,7 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.stream.*;
 
-import todoapp.todo.Tag.Color;
+import todoapp.todo.Attribute.Color;
 
 class SourceArguments {
 	/**

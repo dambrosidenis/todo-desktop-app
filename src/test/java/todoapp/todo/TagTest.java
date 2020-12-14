@@ -6,8 +6,7 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.api.DisplayName;
 import static org.junit.jupiter.api.Assertions.*;
 
-import todoapp.exceptions.EmptyFieldException;
-import todoapp.todo.Tag.Color;
+import todoapp.todo.Attribute.Color;
 
 class TagTest {
 
@@ -56,12 +55,18 @@ class TagTest {
 		} catch (Exception e) {
 			fail("Should not be thrown!");
 		}
-
-        if (text == null || text.isEmpty()) {
-            assertThrows(AssertionError.class, () -> t.changeText(text));
+		
+		if (text == null) {
+			assertThrows(NullPointerException.class, () -> t.changeText(text));
+		} else if (text.isEmpty()) {
+            assertThrows(EmptyFieldException.class, () -> t.changeText(text));
         } else {	
-			t.changeText(text);
-			assertEquals(text, t.getText());
+			try {
+				t.changeText(text);
+				assertEquals(text, t.getText());
+			} catch (Exception e) {
+				fail("Should not be thrown!");
+			}
         }
 	}
 
@@ -81,7 +86,7 @@ class TagTest {
 		}
 
         if (color == null) {
-            assertThrows(AssertionError.class, () -> t.changeColor(color));
+            assertThrows(NullPointerException.class, () -> t.changeColor(color));
         } else {
 			t.changeColor(color);
 			assertEquals(color, t.getColor());
