@@ -3,6 +3,7 @@ package todoapp.todo;
 import org.junit.jupiter.params.provider.Arguments;
 
 import java.util.Collection;
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.stream.*;
@@ -12,7 +13,7 @@ import todoapp.todo.Attribute.Color;
 class SourceArguments {
 	/**
      * Return a stream of default data to use for test.
-     * @return a stream of strings.
+     * @return a stream of String.
      */
     static Stream<String> stringProvider() {
         return Stream.of(null, "", "Test");
@@ -20,15 +21,23 @@ class SourceArguments {
 	
 	/**
      * Return a stream of default data to use for test.
-     * @return a stream of color.
+     * @return a stream of Color.
      */
     static Stream<Color> colorProvider() {
         return Stream.of(null, Color.RED);
 	}
+
+	/**
+     * Return a stream of default data to use for test.
+     * @return a stream of LocalDateTime.
+     */
+    static Stream<LocalDateTime> dateProvider() {
+        return Stream.of(null, LocalDateTime.now(), LocalDateTime.now().plusDays(3), LocalDateTime.now().minusDays(3));
+	}
 	
 	/**
      * Return a stream of default data to use for test.
-     * @return a stream of couple (string, color).
+     * @return a stream of couple (String, Color).
      */
     static Stream<Arguments> tagCreationParametersProvider() {
 		Collection<String> ss = Arrays.asList(stringProvider().toArray(String[]::new));
@@ -39,6 +48,27 @@ class SourceArguments {
 		while (sit.hasNext()) {
 			Iterator<Color> cit = cs.iterator();
 			String first = sit.next();
+			while (cit.hasNext()) {
+				res.add(Arguments.of(first, cit.next()));
+			}
+		}
+
+        return res.build();
+	}
+
+	/**
+     * Return a stream of default data to use for test.
+     * @return a stream of couple (LocalDateTime, Color).
+     */
+    static Stream<Arguments> deadlineCreationParametersProvider() {
+		Collection<LocalDateTime> localDTStream = Arrays.asList(dateProvider().toArray(LocalDateTime[]::new));
+		Collection<Color> cs = Arrays.asList((Color[])colorProvider().toArray(Color[]::new));
+		Stream.Builder<Arguments> res = Stream.builder();
+
+		Iterator<LocalDateTime> localDTIterator = localDTStream.iterator();
+		while (localDTIterator.hasNext()) {
+			Iterator<Color> cit = cs.iterator();
+			LocalDateTime first = localDTIterator.next();
 			while (cit.hasNext()) {
 				res.add(Arguments.of(first, cit.next()));
 			}
@@ -72,7 +102,7 @@ class SourceArguments {
 	
 	/**
      * Return a stream of default data to use for test.
-     * @return a stream of (string, string, Tag).
+     * @return a stream of (String, String, Tag).
      */
     static Stream<Arguments> todoCreationParametersProvider() {
 		Collection<String> ss = Arrays.asList(stringProvider().toArray(String[]::new));
@@ -122,7 +152,7 @@ class SourceArguments {
 
 	/**
      * Return a stream of default data to use for test.
-     * @return a stream of (ToDo, string).
+     * @return a stream of (ToDo, String).
      */
 	static Stream<Arguments> todoAndStringProvider() {
 		Collection<ToDo> tds = Arrays.asList((ToDo[])todoProvider().toArray(ToDo[]::new));

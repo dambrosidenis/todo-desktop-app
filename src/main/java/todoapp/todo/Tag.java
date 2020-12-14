@@ -3,18 +3,18 @@ package todoapp.todo;
 import lombok.EqualsAndHashCode;
 
 /**
- * This class provide an ADT for a Tag. A Tag object is a simple Attribute 
- * characterized by a text and a color. The object is mutable.
+ * This class provide an ADT for a Tag Attribute. A Tag object is a simple 
+ * Attribute characterized by a text and a color. The object is mutable.
  */
 @EqualsAndHashCode
 public class Tag implements Attribute {
 
 	/**
-	 * The object Tag implementation is done with:
+	 * The Tag implementation is done with:
 	 * - a String variable that represent the text
 	 * - a Color variable that represent the color
 	 * 
-	 * INVARIANT: the text must be not null and not empty. The color must be 
+	 * Invariant: the text must be not null and not empty. The color must be 
 	 * not null.
 	 */
 	private String text;
@@ -42,8 +42,8 @@ public class Tag implements Attribute {
 
 	/**
 	 * Constructor that specify the text for the tag and its color.
-	 * @param text: the text of the Tag. REQUIRED to be not null and not empty.
-	 * @param color: the color of the tag. REQUIRED to be not null.
+	 * @param text: the text of the Tag. Required to be not null and not empty.
+	 * @param color: the color of the tag. Required to be not null.
 	 * @throws NullPointerException when the text or the color is null.
 	 * @throws EmptyFieldException when the text is null or empty.
 	 */
@@ -60,7 +60,7 @@ public class Tag implements Attribute {
 
 	/**
 	 * Copy constructor that creates a perfect copy of the Tag instance passed.
-	 * @param t: the Tag to copy. REQUIRED not null.
+	 * @param t: the Tag to copy. Required not null.
 	 * @throws NullPointerException when t is null.
 	 */
 	public Tag(Tag t) {
@@ -89,7 +89,7 @@ public class Tag implements Attribute {
 	}
 
 	/**
-	 * Modify the text of the tag, changing it with a new one.
+	 * Modify this changing the text of the tag with a new one.
 	 * @param newText: the new text of the tag. Required to be not null and not empty.
 	 * @throws NullPointerException if newText is null.
 	 * @throws EmptyFieldException if newText is an empty string.
@@ -106,7 +106,7 @@ public class Tag implements Attribute {
 	}
 
 	/**
-	 * Change the color associated with this tag with a new one.
+	 * Modify this changing the color associated with a new one.
 	 * @param newColor: the new color for the tag. Required to be not null.
 	 * @throws NullPointerException if newColor is null.
 	 */
