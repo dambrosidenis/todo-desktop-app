@@ -173,7 +173,7 @@ class ToDoList {
 		} else {
 			this.removeToDo(todo);
 			ToDo newTodo = new ToDo(todo);
-			newTodo.setTitle(newTitle);
+			newTodo.changeTitle(newTitle);
 			this.addToDo(newTodo);
 			return new ToDo(newTodo);
 		}
@@ -201,7 +201,7 @@ class ToDoList {
 		} else {
 			this.removeToDo(todo);
 			ToDo newTodo = new ToDo(todo);
-			newTodo.setDescription(newDescription);
+			newTodo.changeDescription(newDescription);
 			this.addToDo(newTodo);
 			return new ToDo(newTodo);
 		}
@@ -230,7 +230,7 @@ class ToDoList {
 			return null;
 		} else {
 			ToDo newTodo = new ToDo(todo);
-			if(newTodo.addTag(newTag)) {
+			if(newTodo.addAttribute(newTag)) {
 				this.removeToDo(todo);
 				this.addToDo(newTodo);
 				return new ToDo(newTodo);
@@ -263,7 +263,7 @@ class ToDoList {
 			return null;
 		} else {
 			ToDo newTodo = new ToDo(todo);
-			if(newTodo.deleteTag(tag)) {
+			if(newTodo.deleteAttribute(tag)) {
 				this.removeToDo(todo);
 				this.addToDo(newTodo);
 				return new ToDo(newTodo);

@@ -13,27 +13,53 @@ class ToDoTest {
 	private ToDo td;
 
 	/**
+	 * Creates a copy of the Attribute attr.
+	 * @param attr: the attribute to copy. Required to be not null.
+	 * @return the copy of attr.
+	 */
+	private Attribute copyAttribute(Attribute attr) {
+
+		assert attr != null;
+
+		Attribute res = null;
+
+		if (attr instanceof todoapp.todo.Tag) {
+			res =  new todoapp.todo.Tag((todoapp.todo.Tag) attr);
+		} else if (attr instanceof Deadline) {
+			res = new Deadline((Deadline) attr);
+		}
+
+		assert res != null;
+
+		return res;
+	}
+
+	/**
      * Method to test the constructor method.
      * @param todoTitle: the title for the new ToDo.
 	 * @param todoDescription: the description for the new Tag.
-	 * @param tag: the Tag for the new ToDo.
+	 * @param attr: the Attribute for the new ToDo.
      */
     @ParameterizedTest
     @MethodSource("todoapp.todo.SourceArguments#todoCreationParametersProvider")
     @DisplayName("Testing the constructor method")
     @Tag("ToDo")
-    void constructorToDoTesting(String todoTitle, String todoDescription, todoapp.todo.Tag tag){
-		if (todoTitle == null || tag == null) {
-			assertThrows(NullPointerException.class, () ->  td = new ToDo(todoTitle, todoDescription, tag));
+    void constructorToDoTesting(String todoTitle, String todoDescription, Attribute attr){
+		if (todoTitle == null) {
+			assertThrows(NullPointerException.class, () ->  td = new ToDo(todoTitle, todoDescription, attr));
 		} else if (todoTitle.isEmpty()) {
-            assertThrows(EmptyFieldException.class, () ->  td = new ToDo(todoTitle, todoDescription, tag));
+            assertThrows(EmptyFieldException.class, () ->  td = new ToDo(todoTitle, todoDescription, attr));
         } else {
 			try {
-				td = new ToDo(todoTitle, todoDescription, tag);
-				todoapp.todo.Tag test = new todoapp.todo.Tag(tag);
+				td = new ToDo(todoTitle, todoDescription, attr);
+				if (attr == null) {
+					assertEquals(0, td.getAttributes().size());
+				} else {
+					Attribute test = copyAttribute(attr);
+					assertEquals(true, td.getAttributes().contains(test));
+				}
 				assertEquals(todoTitle, td.getTitle());
 				assertEquals(todoDescription, td.getDescription());
-				assertEquals(true, td.getTags().contains(test));
 			} catch (Exception e) {
 				fail("Should not be thrown!");
 			}
@@ -41,80 +67,107 @@ class ToDoTest {
 	}
 
 	/**
-	 * Method to test the setTitle method.
+	 * Method to test the changeTitle method.
 	 * @param newTitle: the new title of the ToDo.
 	 */
 	@ParameterizedTest
 	@MethodSource("todoapp.todo.SourceArguments#stringProvider")
-	@DisplayName("Testing the setTitle method")
+	@DisplayName("Testing the changeTitle method")
 	@Tag("ToDo")
-	void setTitleTest(String newTitle) {
+	void changeTitleTest(String newTitle) {
 		try {
 			td = new ToDo("Before", "...");
 		} catch (Exception e) {
 			fail("Should not be thrown!");
 		}
 
-		if (newTitle == null || newTitle.isEmpty()) {
-			assertThrows(AssertionError.class, () -> td.setTitle(newTitle));
+		if (newTitle == null) {
+			assertThrows(NullPointerException.class, () -> td.changeTitle(newTitle));
+		} else if (newTitle.isEmpty()) {
+			assertThrows(EmptyFieldException.class, () -> td.changeTitle(newTitle));
 		} else {
-			td.setTitle(newTitle);
-			assertEquals(newTitle, td.getTitle());
-		}
-	}
-
-	/**
-     * Method to test the addTag method.
-     * @param tag: the new Tag to add.
-     */
-    @ParameterizedTest
-    @MethodSource("todoapp.todo.SourceArguments#tagProvider")
-    @DisplayName("Testing the addTag method")
-    @Tag("ToDo")
-	void addTagTest(todoapp.todo.Tag tag) {
-		try {
-			td = new ToDo("New Todo", null, new todoapp.todo.Tag("Test"));
-			if (tag == null) {
-				assertThrows(AssertionError.class, () -> td.addTag(tag));
-			} else {
-				todoapp.todo.Tag test = new todoapp.todo.Tag(tag);
-				
-				assertEquals(false, td.getTags().contains(test));
-				assertEquals(true, td.addTag(tag));
-				assertEquals(true, td.getTags().contains(test));
-			}
-		} catch (Exception e) {
-			fail("Should not be thrown!");
-		}
-	}
-
-	/**
-     * Method to test the deleteTag method.
-     * @param tag: the Tag to delete.
-     */
-    @ParameterizedTest
-    @MethodSource("todoapp.todo.SourceArguments#tagProvider")
-    @DisplayName("Testing the deleteTag method")
-    @Tag("ToDo")
-	void deleteTagTest(todoapp.todo.Tag tag) {
-		try {
-			td = new ToDo("New Todo", null, new todoapp.todo.Tag("Test"));
-		} catch (Exception e) {
-			fail("Should not be thrown!");
-		}
-
-		if (tag == null) {
-			assertThrows(AssertionError.class, () -> td.deleteTag(tag));
-		} else {
-			todoapp.todo.Tag test = null;
 			try {
-				test = new todoapp.todo.Tag(tag);
-			} catch (Exception e) {
+				td.changeTitle(newTitle);
+				assertEquals(newTitle, td.getTitle());
+			} catch (EmptyFieldException efe) {
 				fail("Should not be thrown!");
 			}
-			assertEquals(false, td.getTags().contains(test));
-			assertEquals(false, td.deleteTag(tag));
-			assertEquals(false, td.getTags().contains(test));
+		}
+	}
+
+	/**
+	 * Method to test the changeDescription method.
+	 * @param newDescr: the new description of the ToDo.
+	 */
+	@ParameterizedTest
+	@MethodSource("todoapp.todo.SourceArguments#stringProvider")
+	@DisplayName("Testing the changeDescription method")
+	@Tag("ToDo")
+	void changeDescriptionTest(String newDescr) {
+		try {
+			td = new ToDo("Before", "...");
+		} catch (Exception e) {
+			fail("Should not be thrown!");
+		}
+
+		td.changeDescription(newDescr);
+		assertEquals(newDescr, td.getDescription());
+	}
+
+	/**
+     * Method to test the addAttribute method.
+     * @param attr: the new Attribute to add.
+     */
+    @ParameterizedTest
+    @MethodSource("todoapp.todo.SourceArguments#attributeProvider")
+    @DisplayName("Testing the addAttribute method")
+    @Tag("ToDo")
+	void addAttributeTest(Attribute attr) {
+		try {
+			td = new ToDo("New Todo", null, new todoapp.todo.Tag("Test"));
+		} catch (Exception e) {}
+		if (attr == null) {
+			assertThrows(NullPointerException.class, () -> td.addAttribute(attr));
+		} else {
+			if (attr instanceof todoapp.todo.Tag && attr.getText().compareTo("Test") == 0 && attr.getColor() == Attribute.Color.BLUE) {
+				assertEquals(true, td.getAttributes().contains(attr));
+				assertEquals(false, td.addAttribute(attr));
+			} else {
+				assertEquals(false, td.getAttributes().contains(attr));
+				assertEquals(true, td.addAttribute(attr));
+				assertEquals(true, td.getAttributes().contains(attr));
+			}
+		}
+	}
+
+	/**
+     * Method to test the deleteAttribute method.
+     * @param attr: the Attribute to delete.
+     */
+    @ParameterizedTest
+    @MethodSource("todoapp.todo.SourceArguments#attributeProvider")
+    @DisplayName("Testing the deleteAttribute method")
+    @Tag("ToDo")
+	void deleteAttributeTest(Attribute attr) {
+		try {
+			td = new ToDo("New Todo", null, new todoapp.todo.Tag("Test"));
+		} catch (Exception e) {}
+
+		if (attr == null) {
+			assertEquals(false, td.deleteAttribute(attr));
+		} else {
+			Attribute test = null;
+			try {
+				test = copyAttribute(attr);
+			} catch (Exception e) {}
+			if (attr instanceof todoapp.todo.Tag && attr.getText().compareTo("Test") == 0 && attr.getColor() == Attribute.Color.BLUE) {
+				assertEquals(true, td.getAttributes().contains(attr));
+				assertEquals(true, td.deleteAttribute(attr));
+				assertEquals(false, td.getAttributes().contains(test));
+			} else {
+				assertEquals(false, td.getAttributes().contains(attr));
+				assertEquals(false, td.deleteAttribute(attr));
+			}
 		}
 	}
 }

@@ -144,7 +144,7 @@ class ToDoListTest {
                 fail("Should not be thrown!");
             }
 			assertNotEquals(null, mod);
-			assertEquals(true, mod.getTags().contains(newTag));
+			assertEquals(true, mod.getAttributes().contains(newTag));
 			if (!td.equals(mod)) {
 				assertEquals(false, tdl.contains(td));
 			}
@@ -174,8 +174,8 @@ class ToDoListTest {
                 fail("Should not be thrown!");
             }
 			assertNotEquals(null, mod);
-			if (td.getTags().contains(tag)) {
-				assertEquals(false, mod.getTags().contains(tag));
+			if (td.getAttributes().contains(tag)) {
+				assertEquals(false, mod.getAttributes().contains(tag));
 			} else {
 				assertEquals(true, td.equals(mod));
 			}

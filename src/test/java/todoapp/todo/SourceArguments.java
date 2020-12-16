@@ -82,12 +82,12 @@ class SourceArguments {
      * @return a stream of Tag.
      */
 	static Stream<Tag> tagProvider() {
-		Collection<Arguments> ts = Arrays.asList((Arguments[])tagCreationParametersProvider().toArray(Arguments[]::new));
+		Collection<Arguments> tagStream = Arrays.asList((Arguments[])tagCreationParametersProvider().toArray(Arguments[]::new));
 		Stream.Builder<Tag> res = Stream.builder();
 
 		res.add(null);
 
-		Iterator<Arguments> tagIt = ts.iterator();
+		Iterator<Arguments> tagIt = tagStream.iterator();
 		while (tagIt.hasNext()) {
 			Object[] tmp = tagIt.next().get();
 			String text = (String)tmp[0];
@@ -99,25 +99,77 @@ class SourceArguments {
 
 		return res.build();
 	}
+
+	/**
+     * Return a stream of default data to use for test.
+     * @return a stream of Deadline.
+     */
+	static Stream<Deadline> deadlineProvider() {
+		Collection<Arguments> deadlineStream = Arrays.asList((Arguments[])deadlineCreationParametersProvider().toArray(Arguments[]::new));
+		Stream.Builder<Deadline> res = Stream.builder();
+
+		res.add(null);
+
+		Iterator<Arguments> deadlineIt = deadlineStream.iterator();
+		while (deadlineIt.hasNext()) {
+			Object[] tmp = deadlineIt.next().get();
+			LocalDateTime date = (LocalDateTime)tmp[0];
+			Color c = (Color)tmp[1];
+			try {
+				res.add(new Deadline(date, c));
+			} catch (Exception e) {}
+		}
+
+		return res.build();
+	}
+
+	/**
+     * Return a stream of default data to use for test.
+     * @return a stream of Attribute.
+     */
+	static Stream<Attribute> attributeProvider() {
+		Collection<Tag> tagStream = Arrays.asList((Tag[])tagProvider().toArray(Tag[]::new));
+		Collection<Deadline> deadlineStream = Arrays.asList((Deadline[])deadlineProvider().toArray(Deadline[]::new));
+		Stream.Builder<Attribute> res = Stream.builder();
+
+		Iterator<Tag> tagIt = tagStream.iterator();
+		while (tagIt.hasNext()) {
+			Attribute tag = (Tag)tagIt.next();
+			try {
+				res.add(tag);
+			} catch (Exception e) {}
+		}
+		Iterator<Deadline> deadlineIt = deadlineStream.iterator();
+		while (deadlineIt.hasNext()) {
+			Attribute deadline = (Deadline)deadlineIt.next();
+			if (deadline != null) {
+				try {
+					res.add(deadline);
+				} catch (Exception e) {}
+			}
+		}
+
+		return res.build();
+	}
 	
 	/**
      * Return a stream of default data to use for test.
-     * @return a stream of (String, String, Tag).
+     * @return a stream of (String, String, Attribute).
      */
     static Stream<Arguments> todoCreationParametersProvider() {
-		Collection<String> ss = Arrays.asList(stringProvider().toArray(String[]::new));
-		Collection<Tag> ts = Arrays.asList((Tag[])tagProvider().toArray(Tag[]::new));
+		Collection<String> stringStream = Arrays.asList(stringProvider().toArray(String[]::new));
+		Collection<Attribute> attributeStream = Arrays.asList((Attribute[])tagProvider().toArray(Attribute[]::new));
 		Stream.Builder<Arguments> res = Stream.builder();
 
-		Iterator<String> sit1 = ss.iterator();
-		while (sit1.hasNext()) {
-			Iterator<String> sit2 = ss.iterator();
-			String first = sit1.next();
-			while (sit2.hasNext()) {
-				Iterator<Tag> tagIt = ts.iterator();
-				String second = sit2.next();
-				while (tagIt.hasNext()) {
-					Tag tag = tagIt.next();
+		Iterator<String> stringIt1 = stringStream.iterator();
+		while (stringIt1.hasNext()) {
+			Iterator<String> stringIt2 = stringStream.iterator();
+			String first = stringIt1.next();
+			while (stringIt2.hasNext()) {
+				Iterator<Attribute> attrIt = attributeStream.iterator();
+				String second = stringIt2.next();
+				while (attrIt.hasNext()) {
+					Attribute tag = attrIt.next();
 					res.add(Arguments.of(first, second, tag));
 				}
 			}
