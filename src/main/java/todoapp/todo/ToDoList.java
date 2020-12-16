@@ -6,6 +6,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
+import todoapp.todo.exceptions.*;
+
 /**
  * This class provide an ADT for a list of ToDo.
  * INVARIANT: the list doesn't contain duplicates.

@@ -7,7 +7,7 @@ package todoapp.todo;
  * and by a color.
  * 
  * Invariant:
- * - the text can't be null or an empty string.
+ * - the text can't be null or an empty string
  * - it must have a color
  */
 public interface Attribute {

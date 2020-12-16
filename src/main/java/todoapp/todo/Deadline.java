@@ -3,10 +3,15 @@ package todoapp.todo;
 import java.time.LocalDateTime;
 import lombok.EqualsAndHashCode;
 
+import todoapp.todo.exceptions.*;
+
 /**
- * This class provide an ADT for a Deadline Attribute. A Deadline object is an 
- * Attribute that contains an expiration date. It is characterized by a limit 
- * date and time, and a color. The object is mutable.
+ * This class provide an ADT for a Deadline Attribute. A Deadline is an 
+ * Attribute whose text contains a date representing an expiration date. It is 
+ * characterized by a limit date and time, and a color. The object is mutable.
+ * 
+ * Invariant:
+ * - the date represented by this class must be a valid one (es: not a past date)
  */
 @EqualsAndHashCode
 public class Deadline implements Attribute {

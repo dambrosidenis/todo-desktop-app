@@ -8,6 +8,8 @@ import lombok.EqualsAndHashCode;
 
 import java.util.ArrayList;
 
+import todoapp.todo.exceptions.*;
+
 /**
  * This class provide an ADT for the ToDo object. A ToDo object is 
  * characterized by a title, a description, a list of tags where no duplicates 

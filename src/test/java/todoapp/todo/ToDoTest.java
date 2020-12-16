@@ -6,6 +6,8 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.api.DisplayName;
 import static org.junit.jupiter.api.Assertions.*;
 
+import todoapp.todo.exceptions.*;
+
 class ToDoTest {
 
 	private ToDo td;

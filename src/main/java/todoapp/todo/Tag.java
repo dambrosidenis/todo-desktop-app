@@ -2,9 +2,11 @@ package todoapp.todo;
 
 import lombok.EqualsAndHashCode;
 
+import todoapp.todo.exceptions.EmptyFieldException;
+
 /**
- * This class provide an ADT for a Tag Attribute. A Tag object is a simple 
- * Attribute characterized by a text and a color. The object is mutable.
+ * This class provide an ADT for a Tag Attribute. A Tag is a simple Attribute 
+ * characterized by a text and a color. The object is mutable.
  */
 @EqualsAndHashCode
 public class Tag implements Attribute {
