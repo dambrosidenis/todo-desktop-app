@@ -43,6 +43,7 @@ public class ToDo {
     private String description;
     private final LocalDateTime creation;
 	private ArrayList<Attribute> attributes;
+	private boolean completed;
 
 	private static final String TITLE_EXCEPTION = "A ToDo must have a title.";
 	private static final String TITLE_VALID_VALUE = "A non-empty string.";
@@ -65,7 +66,8 @@ public class ToDo {
 		}
 
         this.title = title;
-        this.description = description;
+		this.description = description;
+		this.completed = false;
 		this.creation = LocalDateTime.now();
 		this.attributes = new ArrayList<Attribute>();
 		if (attr != null) {
@@ -93,7 +95,8 @@ public class ToDo {
 		}
 
         this.title = title;
-        this.description = description;
+		this.description = description;
+		this.completed = false;
 		this.creation = LocalDateTime.now();
 		this.attributes = new ArrayList<Attribute>();
 
@@ -124,7 +127,8 @@ public class ToDo {
 		}
 
         this.title = title;
-        this.description = description;
+		this.description = description;
+		this.completed = false;
         this.creation = LocalDateTime.now();
         this.attributes = new ArrayList<Attribute>();
 	}
@@ -143,7 +147,8 @@ public class ToDo {
 		}
 
         this.title = td.title;
-        this.description = td.description;
+		this.description = td.description;
+		this.completed = td.completed;
         this.creation = td.creation;
 		this.attributes = new ArrayList<Attribute>();
 
@@ -268,7 +273,7 @@ public class ToDo {
 	 * @return true if the attribute was successfully removed, false if it 
 	 * wasn't removed (maybe because it wasn't inside the list).
      */
-    public boolean deleteAttribute(Attribute attr) {
+    public boolean removeAttribute(Attribute attr) {
 
 		if (attr == null) {
 			return false;
@@ -280,7 +285,29 @@ public class ToDo {
 
 		this.attributes.remove(attr);
         return true;
-    }
+	}
+	
+	/**
+	 * Return the state of this ToDo.
+	 * @return true if is done, false otherwise.
+	 */
+	public boolean isCompleted() {
+		return this.completed;
+	}
+
+	/**
+	 * Modify this ToDo marking it as done.
+	 */
+	public void complete() {
+		this.completed = true;
+	}
+
+	/**
+	 * @return the number of attributes assigned to this ToDo.
+	 */
+	public int numberOfAttributes() {
+		return this.attributes.size();
+	}
 
 	/**
 	 * @return a standard iterator over the attributes of this ToDo instance. 

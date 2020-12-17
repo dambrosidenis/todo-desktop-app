@@ -263,7 +263,7 @@ class ToDoList {
 			return null;
 		} else {
 			ToDo newTodo = new ToDo(todo);
-			if(newTodo.deleteAttribute(tag)) {
+			if(newTodo.removeAttribute(tag)) {
 				this.removeToDo(todo);
 				this.addToDo(newTodo);
 				return new ToDo(newTodo);

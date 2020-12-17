@@ -141,20 +141,20 @@ class ToDoTest {
 	}
 
 	/**
-     * Method to test the deleteAttribute method.
+     * Method to test the removeAttribute method.
      * @param attr: the Attribute to delete.
      */
     @ParameterizedTest
     @MethodSource("todoapp.todo.SourceArguments#attributeProvider")
-    @DisplayName("Testing the deleteAttribute method")
+    @DisplayName("Testing the removeAttribute method")
     @Tag("ToDo")
-	void deleteAttributeTest(Attribute attr) {
+	void removeAttributeTest(Attribute attr) {
 		try {
 			td = new ToDo("New Todo", null, new todoapp.todo.Tag("Test"));
 		} catch (Exception e) {}
 
 		if (attr == null) {
-			assertEquals(false, td.deleteAttribute(attr));
+			assertEquals(false, td.removeAttribute(attr));
 		} else {
 			Attribute test = null;
 			try {
@@ -162,11 +162,11 @@ class ToDoTest {
 			} catch (Exception e) {}
 			if (attr instanceof todoapp.todo.Tag && attr.getText().compareTo("Test") == 0 && attr.getColor() == Attribute.Color.BLUE) {
 				assertEquals(true, td.getAttributes().contains(attr));
-				assertEquals(true, td.deleteAttribute(attr));
+				assertEquals(true, td.removeAttribute(attr));
 				assertEquals(false, td.getAttributes().contains(test));
 			} else {
 				assertEquals(false, td.getAttributes().contains(attr));
-				assertEquals(false, td.deleteAttribute(attr));
+				assertEquals(false, td.removeAttribute(attr));
 			}
 		}
 	}
